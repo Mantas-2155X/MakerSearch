@@ -26,7 +26,7 @@
         <PlatformTarget>AnyCPU</PlatformTarget>
         <DebugType>none</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>../_bin/AI/BepInEx/plugins/2155X/</OutputPath>
+        <OutputPath>../_bin/HS2/BepInEx/plugins/2155X/</OutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
@@ -48,6 +48,10 @@
           <HintPath>..\..\..\..\..\..\media\illusion\HoneySelect 2\BepInEx\core\BepInEx.Harmony.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="IL, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\..\..\..\media\illusion\HoneySelect 2\HoneySelect2_Data\Managed\IL.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
@@ -58,6 +62,10 @@
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\..\..\..\media\illusion\HoneySelect 2\HoneySelect2_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="XUnity.AutoTranslator.Plugin.Core, Version=4.11.3.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\..\..\..\media\illusion\HoneySelect 2\BepInEx\Plugins\XUnity.AutoTranslator\XUnity.AutoTranslator.Plugin.Core.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
