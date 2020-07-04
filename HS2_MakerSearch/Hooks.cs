@@ -1,5 +1,6 @@
 using HarmonyLib;
 
+using AIChara;
 using CharaCustom;
 using SuperScrollView;
 
@@ -12,6 +13,7 @@ namespace HS2_MakerSearch
         {
             HS2_MakerSearch.cvsHair = Singleton<CvsH_Hair>.Instance;
             HS2_MakerSearch.cvsClothes = Singleton<CvsC_Clothes>.Instance;
+            HS2_MakerSearch.cvsAccessories = Singleton<CvsA_Slot>.Instance;
             
             Tools.CreateUI();
         }
@@ -39,7 +41,8 @@ namespace HS2_MakerSearch
                     break;
                 case 4:
                     HS2_MakerSearch.category = Tools.SearchCategory.Accessories;
-                    return;
+                    HS2_MakerSearch.controller = Traverse.Create(HS2_MakerSearch.cvsAccessories).Field("sscAcs").GetValue<CustomSelectScrollController>();
+                    break;
                 case 5:
                     HS2_MakerSearch.category = Tools.SearchCategory.Extra;
                     return;
@@ -53,5 +56,23 @@ namespace HS2_MakerSearch
         
         [HarmonyPostfix, HarmonyPatch(typeof(CvsBase), "ChangeMenuFunc")]
         public static void CvsBase_ChangeMenuFunc_ResetSearch() => Tools.ResetSearch();
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsA_Slot), "ChangeMenuFunc")]
+        public static void CvsA_Slot_ChangeMenuFunc_ResetSearch(CvsA_Slot __instance)
+        {
+            var nowAcs = Traverse.Create(__instance).Property("nowAcs").GetValue<ChaFileAccessory>();
+            
+            var obj = Tools.fields[2].gameObject;
+            obj.SetActive(nowAcs.parts[__instance.SNo].type != 350);
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsA_Slot), "ChangeAcsType")]
+        public static void CvsA_Slot_ChangeAcsType_ResetSearch(int idx)
+        {
+            var obj = Tools.fields[2].gameObject;
+            obj.SetActive(idx != 0);
+
+            Tools.ResetSearch();
+        }
     }
 }

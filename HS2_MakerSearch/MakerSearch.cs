@@ -7,6 +7,7 @@ using HarmonyLib;
 
 using CharaCustom;
 using SuperScrollView;
+using UnityEngine;
 
 namespace HS2_MakerSearch
 {
@@ -19,6 +20,7 @@ namespace HS2_MakerSearch
         
         public static CvsH_Hair cvsHair;
         public static CvsC_Clothes cvsClothes;
+        public static CvsA_Slot cvsAccessories;
         
         public static LoopListView2 view;
         public static CustomSelectScrollController controller;
@@ -49,27 +51,26 @@ namespace HS2_MakerSearch
 
             if (searchString == "")
                 return;
-            
+
             var trav = Traverse.Create(controller);
             var datas = trav.Field("scrollerDatas").GetValue<CustomSelectScrollController.ScrollData[]>();
-            
+
             var datalist = datas.ToList();
             foreach (var data in datalist.ToArray())
             {
                 if(Tools.ItemMatchesSearch(data.info, searchString))
                     continue;
-                
+
                 if (controller.selectInfo == data)
                     controller.SelectInfoClear();
-                            
+
                 datalist.Remove(data);
             }
             datas = datalist.ToArray();
-            
+
             trav.Field("scrollerDatas").SetValue(datas);
-            
-            var num = datas.Length / trav.Field("countPerRow").GetValue<int>();
-            view.ReSetListItemCount(num);
+
+            view.ReSetListItemCount(Mathf.CeilToInt((float)datas.Length / trav.Field("countPerRow").GetValue<int>()));
         }
     }
 }

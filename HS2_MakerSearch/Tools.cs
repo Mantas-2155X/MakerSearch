@@ -11,14 +11,15 @@ namespace HS2_MakerSearch
 {
     public static class Tools
     {
-        private static readonly InputField[] fields = new InputField[2];
+        public static readonly InputField[] fields = new InputField[3];
         
         private static readonly string[] targets =
         {
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinHair/H_Hair/Setting/Setting01",                      // Hair
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinClothes/DefaultWin/C_Clothes/Setting/Setting01",     // Clothes
-            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinHair/H_Hair/Setting/Setting01"                       // Hair
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinAccessory/A_Slot/Setting/Setting01"                  // Accessories
         };
-        
+ 
         public static void CreateUI()
         {
             var orig = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_ShapeWhole/Scroll View/Viewport/Content/SliderSet/SldInputField");
@@ -39,23 +40,23 @@ namespace HS2_MakerSearch
 
                 var rect = cp.GetComponent<RectTransform>();
 
-                if (i == 0)
+                if (i == 1) // Clothes
                 {
                     rect.offsetMin = new Vector2(-250, 3);
                     rect.offsetMax = new Vector2(0, -383);
                 } 
-                else if (i == 1)
+                else if (i == 0 || i == 2) // Hair && Accessories
                 {
                     rect.offsetMin = new Vector2(-420, 3);
                     rect.offsetMax = new Vector2(0, -383);
 
                     var box = target.transform.Find("SelectBox");
-                    box.GetComponent<RectTransform>().offsetMin = new Vector2(0, -372);
-
                     var scrollview = box.Find("Scroll View");
-                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, -372);
+                    
+                    box.GetComponent<RectTransform>().offsetMin = new Vector2(0, -372);
+                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, i == 2 ? -264 : -372);
                 }
-                
+
                 var input = cp.GetComponent<InputField>();
                 input.contentType = InputField.ContentType.Standard;
                 input.characterLimit = 64;
@@ -72,6 +73,9 @@ namespace HS2_MakerSearch
 
                 fields[i] = input;
 
+                if (i == 2)
+                    cp.SetActive(false);
+                
                 i++;
             }
         }
@@ -149,7 +153,9 @@ namespace HS2_MakerSearch
                     HS2_MakerSearch.cvsClothes.UpdateCustomUI();
                     break;
                 case SearchCategory.Accessories:
-                    return false;
+                    HS2_MakerSearch.cvsAccessories.UpdateAcsList();
+                    HS2_MakerSearch.cvsAccessories.UpdateCustomUI();
+                    break;
                 case SearchCategory.Extra:
                     return false;
                 case SearchCategory.None:
