@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 
 using BepInEx;
+using BepInEx.Configuration;
+
 using HarmonyLib;
 using XUnity.AutoTranslator.Plugin.Core;
 
@@ -14,45 +16,41 @@ namespace HS2_MakerSearch
     {
         public const string VERSION = "1.0.0";
         
-        private static CvsH_Hair cvsHair;
-        private static CvsC_Clothes cvsClothes;
+        public static CvsH_Hair cvsHair;
+        public static CvsC_Clothes cvsClothes;
         
-        private static LoopListView2 view;
-        private static CustomSelectScrollController controller;
-
-        private static SearchBy type;
-        private static SearchCategory category;
+        public static LoopListView2 view;
+        public static CustomSelectScrollController controller;
+        
+        public static Tools.SearchCategory category;
+        
+        private static ConfigEntry<bool> caseSensitive { get; set; }
+        private static ConfigEntry<bool> useTranslatedCache { get; set; }
+        
+        private static ConfigEntry<Tools.SearchBy> searchBy { get; set; }
         
         private void Awake()
         {
-            var harmony = new Harmony(nameof(HS2_MakerSearch));
-            harmony.PatchAll(typeof(HS2_MakerSearch));
+            caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
+            useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works on search by Name"));
+            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
 
-            type = SearchBy.Name;
-            category = SearchCategory.None;
+            category = Tools.SearchCategory.None;
+            
+            var harmony = new Harmony(nameof(HS2_MakerSearch));
+            harmony.PatchAll(typeof(Hooks));
         }
 
         public static void Search(string text)
         {
-            if (category == SearchCategory.None)
+            if (!Tools.UpdateUI(category))
                 return;
-            
-            switch (category)
-            {
-                case SearchCategory.Hair:
-                    cvsHair.UpdateHairList();
-                    cvsHair.UpdateCustomUI();
-                    break;
-                case SearchCategory.Clothes:
-                    cvsClothes.UpdateClothesList();
-                    cvsClothes.UpdateCustomUI();
-                    break;
-            }
 
             if (text == "")
                 return;
             
-            var lowerText = text.ToLower();
+            if (caseSensitive.Value)
+                text = text.ToLower();
 
             var trav = Traverse.Create(controller);
             var datas = trav.Field("scrollerDatas").GetValue<CustomSelectScrollController.ScrollData[]>();
@@ -62,23 +60,26 @@ namespace HS2_MakerSearch
             {
                 var str = "";
 
-                switch (type)
+                switch (searchBy.Value)
                 {
-                    case SearchBy.Name:
+                    case Tools.SearchBy.Name:
                         str = data.info.name;
-                        AutoTranslator.Default.TranslateAsync(data.info.name, result => { str = result.Succeeded ? result.TranslatedText : data.info.name; });
+                        
+                        if (useTranslatedCache.Value)
+                            AutoTranslator.Default.TranslateAsync(data.info.name, result => { str = result.Succeeded ? result.TranslatedText : data.info.name; });
                         break;
-                    case SearchBy.AssetName:
+                    case Tools.SearchBy.AssetName:
                         str = data.info.assetName;
                         break;
-                    case SearchBy.ID:
+                    case Tools.SearchBy.ID:
                         str = data.info.id.ToString();
                         break;
                 }
 
-                str = str.ToLower();
+                if (caseSensitive.Value)
+                    str = str.ToLower();
 
-                if (str.Contains(lowerText)) 
+                if (str.Contains(text)) 
                     continue;
                 
                 if (controller.selectInfo == data)
@@ -92,64 +93,6 @@ namespace HS2_MakerSearch
             
             var num = datas.Length / trav.Field("countPerRow").GetValue<int>();
             view.ReSetListItemCount(num);
-        }
-        
-        [HarmonyPostfix, HarmonyPatch(typeof(CustomControl), "Start")]
-        public static void CustomControl_Start_SetVars()
-        {
-            cvsHair = Singleton<CvsH_Hair>.Instance;
-            cvsClothes = Singleton<CvsC_Clothes>.Instance;
-        }
-
-        [HarmonyPostfix, HarmonyPatch(typeof(CustomChangeMainMenu), "ChangeWindowSetting")]
-        public static void CustomChangeMainMenu_ChangeWindowSetting_SetMainCat(int no)
-        {
-            switch (no)
-            {
-                case 0:
-                    category = SearchCategory.Face;
-                    break;
-                case 1:
-                    category = SearchCategory.Body;
-                    break;
-                case 2:
-                    category = SearchCategory.Hair;
-                    controller = Traverse.Create(cvsHair).Field("sscHairType").GetValue<CustomSelectScrollController>();
-                    break;
-                case 3:
-                    category = SearchCategory.Clothes;
-                    controller = Traverse.Create(cvsClothes).Field("sscClothesType").GetValue<CustomSelectScrollController>();
-                    break;
-                case 4:
-                    category = SearchCategory.Accessories;
-                    break;
-                case 5:
-                    category = SearchCategory.Extra;
-                    break;
-            }
-
-            if (category == SearchCategory.None)
-                return;
-            
-            view = controller.GetComponent<LoopListView2>();
-        }
-        
-        private enum SearchBy
-        {
-            Name,
-            AssetName,
-            ID
-        }
-
-        private enum SearchCategory
-        {
-            Face,
-            Body,
-            Hair,
-            Clothes,
-            Accessories,
-            Extra,
-            None
         }
     }
 }
