@@ -12,11 +12,15 @@ namespace HS2_MakerSearch
         {
             HS2_MakerSearch.cvsHair = Singleton<CvsH_Hair>.Instance;
             HS2_MakerSearch.cvsClothes = Singleton<CvsC_Clothes>.Instance;
+            
+            Tools.CreateUI();
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CustomChangeMainMenu), "ChangeWindowSetting")]
         public static void CustomChangeMainMenu_ChangeWindowSetting_SetMainCat(int no)
         {
+            Tools.ResetSearch();
+            
             switch (no)
             {
                 case 0:
@@ -43,8 +47,11 @@ namespace HS2_MakerSearch
                     HS2_MakerSearch.category = Tools.SearchCategory.None;
                     return;
             }
-            
+
             HS2_MakerSearch.view = HS2_MakerSearch.controller.GetComponent<LoopListView2>();
         }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsBase), "ChangeMenuFunc")]
+        public static void CvsBase_ChangeMenuFunc_ResetSearch() => Tools.ResetSearch();
     }
 }

@@ -4,7 +4,6 @@ using BepInEx;
 using BepInEx.Configuration;
 
 using HarmonyLib;
-using XUnity.AutoTranslator.Plugin.Core;
 
 using CharaCustom;
 using SuperScrollView;
@@ -15,6 +14,8 @@ namespace HS2_MakerSearch
     public class HS2_MakerSearch : BaseUnityPlugin
     {
         public const string VERSION = "1.0.0";
+
+        public static string searchString;
         
         public static CvsH_Hair cvsHair;
         public static CvsC_Clothes cvsClothes;
@@ -24,16 +25,16 @@ namespace HS2_MakerSearch
         
         public static Tools.SearchCategory category;
         
-        private static ConfigEntry<bool> caseSensitive { get; set; }
-        private static ConfigEntry<bool> useTranslatedCache { get; set; }
+        public static ConfigEntry<bool> caseSensitive { get; private set; }
+        public static ConfigEntry<bool> useTranslatedCache { get; private set; }
         
-        private static ConfigEntry<Tools.SearchBy> searchBy { get; set; }
+        public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
         
         private void Awake()
         {
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
-            useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works on search by Name"));
-            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
+            useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
+            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.AllButId);
 
             category = Tools.SearchCategory.None;
             
@@ -41,45 +42,21 @@ namespace HS2_MakerSearch
             harmony.PatchAll(typeof(Hooks));
         }
 
-        public static void Search(string text)
+        public static void Search()
         {
             if (!Tools.UpdateUI(category))
                 return;
 
-            if (text == "")
+            if (searchString == "")
                 return;
             
-            if (caseSensitive.Value)
-                text = text.ToLower();
-
             var trav = Traverse.Create(controller);
             var datas = trav.Field("scrollerDatas").GetValue<CustomSelectScrollController.ScrollData[]>();
             
             var datalist = datas.ToList();
             foreach (var data in datalist.ToArray())
             {
-                var str = "";
-
-                switch (searchBy.Value)
-                {
-                    case Tools.SearchBy.Name:
-                        str = data.info.name;
-                        
-                        if (useTranslatedCache.Value)
-                            AutoTranslator.Default.TranslateAsync(data.info.name, result => { str = result.Succeeded ? result.TranslatedText : data.info.name; });
-                        break;
-                    case Tools.SearchBy.AssetName:
-                        str = data.info.assetName;
-                        break;
-                    case Tools.SearchBy.ID:
-                        str = data.info.id.ToString();
-                        break;
-                }
-
-                if (caseSensitive.Value)
-                    str = str.ToLower();
-
-                if (str.Contains(text)) 
+                if(Tools.ItemMatchesSearch(data.info, searchString))
                     continue;
                 
                 if (controller.selectInfo == data)
