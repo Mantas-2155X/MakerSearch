@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using CharaCustom;
 using XUnity.AutoTranslator.Plugin.Core;
 
-namespace HS2_MakerSearch
+namespace AI_MakerSearch
 {
     public static class Tools
     {
@@ -70,8 +70,8 @@ namespace HS2_MakerSearch
                 input.onValueChanged.AddListener(delegate(string text) { placeholder.enabled = text == ""; });
                 input.onEndEdit.AddListener(delegate(string text)
                 {
-                    HS2_MakerSearch.searchString = text;
-                    HS2_MakerSearch.Search();
+                    AI_MakerSearch.searchString = text;
+                    AI_MakerSearch.Search();
                 });
 
                 fields[i] = input;
@@ -87,12 +87,12 @@ namespace HS2_MakerSearch
         {
             var searchIn = "";
 
-            switch (HS2_MakerSearch.searchBy.Value)
+            switch (AI_MakerSearch.searchBy.Value)
             {
                 case SearchBy.Name:
                     searchIn = data.name;
                     
-                    if (HS2_MakerSearch.useTranslatedCache.Value)
+                    if (AI_MakerSearch.useTranslatedCache.Value)
                         AutoTranslator.Default.TranslateAsync(data.name, result => { searchIn = result.Succeeded ? result.TranslatedText : data.name; });
 
                     break;
@@ -102,7 +102,7 @@ namespace HS2_MakerSearch
             }
 
             var rule = StringComparison.Ordinal;
-            if (!HS2_MakerSearch.caseSensitive.Value)
+            if (!AI_MakerSearch.caseSensitive.Value)
             {
                 searchStr = searchStr.ToLowerInvariant();
                 rule = StringComparison.OrdinalIgnoreCase;
@@ -121,16 +121,16 @@ namespace HS2_MakerSearch
                 case SearchCategory.Body:
                     return false;
                 case SearchCategory.Hair:
-                    HS2_MakerSearch.cvsHair.UpdateHairList();
-                    HS2_MakerSearch.cvsHair.UpdateCustomUI();
+                    AI_MakerSearch.cvsHair.UpdateHairList();
+                    AI_MakerSearch.cvsHair.UpdateCustomUI();
                     break;
                 case SearchCategory.Clothes:
-                    HS2_MakerSearch.cvsClothes.UpdateClothesList();
-                    HS2_MakerSearch.cvsClothes.UpdateCustomUI();
+                    AI_MakerSearch.cvsClothes.UpdateClothesList();
+                    AI_MakerSearch.cvsClothes.UpdateCustomUI();
                     break;
                 case SearchCategory.Accessories:
-                    HS2_MakerSearch.cvsAccessories.UpdateAcsList();
-                    HS2_MakerSearch.cvsAccessories.UpdateCustomUI();
+                    AI_MakerSearch.cvsAccessories.UpdateAcsList();
+                    AI_MakerSearch.cvsAccessories.UpdateCustomUI();
                     break;
                 case SearchCategory.Extra:
                     return false;
@@ -145,11 +145,11 @@ namespace HS2_MakerSearch
 
         public static void ResetSearch()
         {
-            if (HS2_MakerSearch.searchString == "") 
+            if (AI_MakerSearch.searchString == "") 
                 return;
             
-            UpdateUI(HS2_MakerSearch.category);
-            HS2_MakerSearch.searchString = "";
+            UpdateUI(AI_MakerSearch.category);
+            AI_MakerSearch.searchString = "";
 
             foreach (var field in fields.Where(field => field != null))
                 field.text = "";

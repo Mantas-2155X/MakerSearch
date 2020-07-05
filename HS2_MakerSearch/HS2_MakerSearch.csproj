@@ -79,7 +79,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Hooks.cs" />
-        <Compile Include="MakerSearch.cs" />
+        <Compile Include="HS2_MakerSearch.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Tools.cs" />
     </ItemGroup>

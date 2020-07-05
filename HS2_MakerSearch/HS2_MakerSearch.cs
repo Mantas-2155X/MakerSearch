@@ -36,7 +36,7 @@ namespace HS2_MakerSearch
         {
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
-            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.AllButId);
+            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
 
             category = Tools.SearchCategory.None;
             

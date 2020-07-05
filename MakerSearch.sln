@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HS2_MakerSearch", "HS2_MakerSearch\HS2_MakerSearch.csproj", "{6F9B0D2E-CB5F-4681-968A-F64B10A89472}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_MakerSearch", "AI_MakerSearch\AI_MakerSearch.csproj", "{812FF1EB-384F-433A-89B5-E406CD32EFDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{6F9B0D2E-CB5F-4681-968A-F64B10A89472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F9B0D2E-CB5F-4681-968A-F64B10A89472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F9B0D2E-CB5F-4681-968A-F64B10A89472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{812FF1EB-384F-433A-89B5-E406CD32EFDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{812FF1EB-384F-433A-89B5-E406CD32EFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{812FF1EB-384F-433A-89B5-E406CD32EFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{812FF1EB-384F-433A-89B5-E406CD32EFDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
