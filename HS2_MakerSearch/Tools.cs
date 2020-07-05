@@ -64,6 +64,9 @@ namespace HS2_MakerSearch
                 input.onValueChanged.RemoveAllListeners();
                 input.onEndEdit.RemoveAllListeners();
 
+                input.textComponent.text = "";
+                input.text = "";
+
                 input.onValueChanged.AddListener(delegate(string text) { placeholder.enabled = text == ""; });
                 input.onEndEdit.AddListener(delegate(string text)
                 {
