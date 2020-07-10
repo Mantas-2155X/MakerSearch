@@ -7,16 +7,19 @@ using HarmonyLib;
 
 using CharaCustom;
 using SuperScrollView;
+
 using UnityEngine;
 
 namespace AI_MakerSearch
 {
+    [BepInProcess("AI-Syoujyo")]
     [BepInPlugin(nameof(AI_MakerSearch), nameof(AI_MakerSearch), VERSION)]
     public class AI_MakerSearch : BaseUnityPlugin
     {
         public const string VERSION = "1.0.0";
 
         public static string searchString;
+        public static bool isSteam;
         
         public static CvsH_Hair cvsHair;
         public static CvsC_Clothes cvsClothes;
@@ -42,6 +45,8 @@ namespace AI_MakerSearch
             
             var harmony = new Harmony(nameof(AI_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
+
+            isSteam = Application.productName == "AI-Shoujo";
         }
 
         public static void Search()

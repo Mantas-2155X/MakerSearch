@@ -28,6 +28,16 @@ namespace AI_MakerSearch
             foreach (var targetStr in targets)
             {
                 var target = GameObject.Find(targetStr);
+
+                if (i == 1 && AI_MakerSearch.isSteam)
+                {
+                    var color = target.transform.Find("DefaultColor");
+                    var rectC = color.GetComponent<RectTransform>();
+                    rectC.offsetMax = new Vector2(200, rectC.offsetMax.y);
+                    
+                    var button = color.Find("Button");
+                    button.GetComponent<RectTransform>().offsetMax = new Vector2(200, 0);
+                }
                 
                 var cp = UnityEngine.Object.Instantiate(orig, target.transform);
                 cp.name = "Search";
@@ -47,7 +57,7 @@ namespace AI_MakerSearch
                 } 
                 else if (i == 0 || i == 2) // Hair && Accessories
                 {
-                    rect.offsetMin = new Vector2(-420, 3);
+                    rect.offsetMin = new Vector2(AI_MakerSearch.isSteam ? -452 : -420, 3);
                     rect.offsetMax = new Vector2(0, -383);
 
                     var box = target.transform.Find("SelectBox");

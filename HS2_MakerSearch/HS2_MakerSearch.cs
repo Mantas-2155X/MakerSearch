@@ -7,10 +7,12 @@ using HarmonyLib;
 
 using CharaCustom;
 using SuperScrollView;
+
 using UnityEngine;
 
 namespace HS2_MakerSearch
 {
+    [BepInProcess("HoneySelect2")]
     [BepInPlugin(nameof(HS2_MakerSearch), nameof(HS2_MakerSearch), VERSION)]
     public class HS2_MakerSearch : BaseUnityPlugin
     {
