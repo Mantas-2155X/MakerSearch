@@ -11,5 +11,21 @@ namespace KK_MakerSearch
         {
             Tools.CreateUI();
         }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "UpdateStateNew")]
+        public static void CustomSelectListCtrl_UpdateStateNew_ChangeController(CustomSelectListCtrl __instance)
+        {
+            Tools.ResetSearch();
+            
+            KK_MakerSearch.ctrl = __instance;
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomAcsSelectKind), "UpdateCustomUI")]
+        public static void CustomAcsSelectKind_UpdateCustomUI_ChangeController(CustomSelectListCtrl ___listCtrl)
+        {
+            Tools.ResetSearch();
+            
+            KK_MakerSearch.ctrl = ___listCtrl;
+        }
     }
 }
