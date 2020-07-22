@@ -17,19 +17,26 @@ namespace AI_MakerSearch
     [BepInPlugin(nameof(AI_MakerSearch), nameof(AI_MakerSearch), VERSION)]
     public class AI_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.1.0";
 
-        public static string searchString;
         public static bool isSteam;
+        public static string searchString;
         
         public static CvsH_Hair cvsHair;
         public static CvsC_Clothes cvsClothes;
         public static CvsA_Slot cvsAccessories;
+        public static CvsB_Skin cvsSkin;
+        public static CvsB_Sunburn cvsSunburn;
+        public static CvsB_Nip cvsNip;
+        public static CvsB_Underhair cvsUnderhair;
+        public static CvsB_Paint cvsPaint;
         
         public static LoopListView2 view;
         public static CustomSelectScrollController controller;
         
         public static Tools.SearchCategory category;
+
+        public static byte sex;
         
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
@@ -46,7 +53,7 @@ namespace AI_MakerSearch
             
             var harmony = new Harmony(nameof(AI_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
-
+            
             isSteam = Application.productName == "AI-Shoujo";
         }
 

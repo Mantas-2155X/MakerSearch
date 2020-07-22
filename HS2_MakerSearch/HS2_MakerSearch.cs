@@ -16,18 +16,25 @@ namespace HS2_MakerSearch
     [BepInPlugin(nameof(HS2_MakerSearch), nameof(HS2_MakerSearch), VERSION)]
     public class HS2_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.1.0";
 
         public static string searchString;
         
         public static CvsH_Hair cvsHair;
         public static CvsC_Clothes cvsClothes;
         public static CvsA_Slot cvsAccessories;
+        public static CvsB_Skin cvsSkin;
+        public static CvsB_Sunburn cvsSunburn;
+        public static CvsB_Nip cvsNip;
+        public static CvsB_Underhair cvsUnderhair;
+        public static CvsB_Paint cvsPaint;
         
         public static LoopListView2 view;
         public static CustomSelectScrollController controller;
         
         public static Tools.SearchCategory category;
+
+        public static byte sex;
         
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }

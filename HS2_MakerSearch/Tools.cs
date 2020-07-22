@@ -1,23 +1,32 @@
 using System;
 using System.Linq;
 
+using AIChara;
+using CharaCustom;
+
 using UnityEngine;
 using UnityEngine.UI;
 
-using CharaCustom;
+using HarmonyLib;
 using XUnity.AutoTranslator.Plugin.Core;
 
 namespace HS2_MakerSearch
 {
     public static class Tools
     {
-        public static readonly InputField[] fields = new InputField[3];
+        public static readonly InputField[] fields = new InputField[9];
         
         private static readonly string[] targets =
         {
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinHair/H_Hair/Setting/Setting01",                      // Hair
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinClothes/DefaultWin/C_Clothes/Setting/Setting01",     // Clothes
-            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinAccessory/A_Slot/Setting/Setting01"                  // Accessories
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinAccessory/A_Slot/Setting/Setting01",                 // Accessories
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Skin/Setting/Setting01",                      // Body Skin
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Skin/Setting/Setting02",                      // Body Detail
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Sunburn/Setting/Setting01",                   // Body Sunburn
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Nip/Setting/Setting01",                       // Body Nip
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Underhair/Setting/Setting01",                 // Body Underhair
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Paint/Setting/Setting01",                     // Body Paint
         };
  
         public static void CreateUI()
@@ -45,7 +54,7 @@ namespace HS2_MakerSearch
                     rect.offsetMin = new Vector2(-250, 3);
                     rect.offsetMax = new Vector2(0, -383);
                 } 
-                else if (i == 0 || i == 2) // Hair && Accessories
+                else
                 {
                     rect.offsetMin = new Vector2(-420, 3);
                     rect.offsetMax = new Vector2(0, -383);
@@ -54,7 +63,7 @@ namespace HS2_MakerSearch
                     var scrollview = box.Find("Scroll View");
                     
                     box.GetComponent<RectTransform>().offsetMin = new Vector2(0, -372);
-                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, i == 2 ? -264 : -372);
+                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, i == 2 ? -264 : i == 4 ? -332 : -372);
                 }
 
                 var input = cp.GetComponent<InputField>();
@@ -118,8 +127,42 @@ namespace HS2_MakerSearch
             {
                 case SearchCategory.Face:
                     return false;
-                case SearchCategory.Body:
-                    return false;
+                case SearchCategory.BodySkin:
+                    var listBSkin = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_skin_b : ChaListDefine.CategoryNo.ft_skin_b);
+                    Traverse.Create(HS2_MakerSearch.cvsSkin).Field("sscSkinType").Method("CreateList", listBSkin).GetValue();
+
+                    HS2_MakerSearch.cvsSkin.UpdateCustomUI();
+                    break;
+                case SearchCategory.BodyDetail:
+                    var listBDetail = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_detail_b : ChaListDefine.CategoryNo.ft_detail_b);
+                    Traverse.Create(HS2_MakerSearch.cvsSkin).Field("sscDetailType").Method("CreateList", listBDetail).GetValue();
+
+                    HS2_MakerSearch.cvsSkin.UpdateCustomUI();
+                    break;
+                case SearchCategory.BodySunburn:
+                    var listBSunburn = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_sunburn : ChaListDefine.CategoryNo.ft_sunburn);
+                    Traverse.Create(HS2_MakerSearch.cvsSunburn).Field("sscSunburnType").Method("CreateList", listBSunburn).GetValue();
+
+                    HS2_MakerSearch.cvsSunburn.UpdateCustomUI();
+                    break;
+                case SearchCategory.BodyNip:
+                    var listBNip = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_nip);
+                    Traverse.Create(HS2_MakerSearch.cvsNip).Field("sscNipType").Method("CreateList", listBNip).GetValue();
+
+                    HS2_MakerSearch.cvsNip.UpdateCustomUI();
+                    break;
+                case SearchCategory.BodyUnderhair:
+                    var listBUnderhair = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_underhair);
+                    Traverse.Create(HS2_MakerSearch.cvsUnderhair).Field("sscUnderhairType").Method("CreateList", listBUnderhair).GetValue();
+
+                    HS2_MakerSearch.cvsUnderhair.UpdateCustomUI();
+                    break;
+                case SearchCategory.BodyPaint:
+                    var listBPaint = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint);
+                    Traverse.Create(HS2_MakerSearch.cvsPaint).Field("sscPaintType").Method("CreateList", listBPaint).GetValue();
+
+                    HS2_MakerSearch.cvsPaint.UpdateCustomUI();
+                    break;
                 case SearchCategory.Hair:
                     HS2_MakerSearch.cvsHair.UpdateHairList();
                     HS2_MakerSearch.cvsHair.UpdateCustomUI();
@@ -164,7 +207,12 @@ namespace HS2_MakerSearch
         public enum SearchCategory
         {
             Face,
-            Body,
+            BodySkin,
+            BodyDetail,
+            BodySunburn,
+            BodyNip,
+            BodyUnderhair,
+            BodyPaint,
             Hair,
             Clothes,
             Accessories,
