@@ -25,6 +25,40 @@ namespace EC_MakerSearch
             var parent = GameObject.Find("CustomScene/CustomRoot/FrontUIGroup/CustomUIGroup/CvsMenuTree");
             var inputField = parent.transform.Find("02_HairTop/tglFront/FrontTop/sldTemp/InputField");
 
+            // Body
+            {
+                var bodyObj = parent.transform.Find("01_BodyTop");
+                var body = bodyObj.GetComponent<CustomChangeBodyMenu>();
+
+                var trav = Traverse.Create(body);
+                
+                var cvsItems = new []
+                {
+                    trav.Field("cvsBodyAll").GetValue<CvsBodyAll>().gameObject,
+                    trav.Field("cvsBodyPaint").GetValue<CvsBodyPaint>().gameObject,
+                    trav.Field("cvsBreast").GetValue<CvsBreast>().gameObject,
+                    trav.Field("cvsSunburn").GetValue<CvsSunburn>().gameObject,
+                    trav.Field("cvsUnderhair").GetValue<CvsUnderhair>().gameObject
+                };
+                
+                foreach (var ctrl in cvsItems)
+                {
+                    for (var i = 0; i < ctrl.transform.childCount; i++)
+                    {
+                        var child = ctrl.transform.GetChild(i);
+                        
+                        if(!child.name.Contains("win"))
+                            continue;
+
+                        if (!child.name.Contains("Kind") && !child.name.Contains("Layout")) 
+                            continue;
+                        
+                        var window = child.Find("customSelectWindow");
+                        SetupSearchBar(window, inputField);
+                    }
+                }
+            }
+            
             // Hair
             {
                 var hairObj = parent.transform.Find("02_HairTop");
@@ -55,7 +89,7 @@ namespace EC_MakerSearch
                     {
                         var child = ctrl.transform.GetChild(i);
                         
-                        if(!child.name.Contains("win") && !child.name.Contains("Kind"))
+                        if (!child.name.Contains("win") || !child.name.Contains("Kind"))
                             continue;
 
                         var window = child.Find("customSelectWindow");
