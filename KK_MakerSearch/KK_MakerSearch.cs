@@ -11,6 +11,7 @@ using ChaCustom;
 namespace KK_MakerSearch
 {
     [BepInProcess("Koikatu")]
+    [BepInProcess("Koikatsu Party")]
     [BepInPlugin(nameof(KK_MakerSearch), nameof(KK_MakerSearch), VERSION)]
     public class KK_MakerSearch : BaseUnityPlugin
     {

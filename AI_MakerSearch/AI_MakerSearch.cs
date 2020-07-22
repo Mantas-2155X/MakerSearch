@@ -13,6 +13,7 @@ using UnityEngine;
 namespace AI_MakerSearch
 {
     [BepInProcess("AI-Syoujyo")]
+    [BepInProcess("AI-Shoujo")]
     [BepInPlugin(nameof(AI_MakerSearch), nameof(AI_MakerSearch), VERSION)]
     public class AI_MakerSearch : BaseUnityPlugin
     {
