@@ -12,6 +12,7 @@ This plugin allows you search items in the Character Maker.
 * Hair searching support  
 * Clothes searching support  
 * Accessories searching support  
+* Body searching support
 
 **Usage:**  
 * Open the charamaker, respective UI category  
