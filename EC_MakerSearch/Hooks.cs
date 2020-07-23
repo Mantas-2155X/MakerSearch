@@ -17,7 +17,8 @@ namespace EC_MakerSearch
         {
             Tools.ResetSearch();
             
-            EC_MakerSearch.ctrl = __instance;
+            if(__instance.canvasGrp[0].interactable)
+                EC_MakerSearch.ctrl = __instance;
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomAcsSelectKind), "UpdateCustomUI")]

@@ -49,6 +49,8 @@ namespace HS2_MakerSearch
                 case 4:
                     HS2_MakerSearch.category = Tools.SearchCategory.Accessories;
                     HS2_MakerSearch.controller = Traverse.Create(HS2_MakerSearch.cvsAccessories).Field("sscAcs").GetValue<CustomSelectScrollController>();
+                    
+                    Tools.fields[2].gameObject.SetActive(!Traverse.Create(HS2_MakerSearch.cvsAccessories).Field("tglType").GetValue<Toggle[]>()[0].isOn);
                     break;
                 case 5:
                     HS2_MakerSearch.category = Tools.SearchCategory.Extra;

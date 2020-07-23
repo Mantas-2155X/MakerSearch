@@ -17,7 +17,8 @@ namespace KK_MakerSearch
         {
             Tools.ResetSearch();
             
-            KK_MakerSearch.ctrl = __instance;
+            if(__instance.canvasGrp[0].interactable)
+                KK_MakerSearch.ctrl = __instance;
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomAcsSelectKind), "UpdateCustomUI")]

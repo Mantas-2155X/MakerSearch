@@ -17,7 +17,7 @@ namespace AI_MakerSearch
     [BepInPlugin(nameof(AI_MakerSearch), nameof(AI_MakerSearch), VERSION)]
     public class AI_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.1.0";
+        public const string VERSION = "1.1.1";
 
         public static bool isSteam;
         public static string searchString;

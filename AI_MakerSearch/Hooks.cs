@@ -49,6 +49,8 @@ namespace AI_MakerSearch
                 case 4:
                     AI_MakerSearch.category = Tools.SearchCategory.Accessories;
                     AI_MakerSearch.controller = Traverse.Create(AI_MakerSearch.cvsAccessories).Field("sscAcs").GetValue<CustomSelectScrollController>();
+                    
+                    Tools.fields[2].gameObject.SetActive(!Traverse.Create(AI_MakerSearch.cvsAccessories).Field("tglType").GetValue<Toggle[]>()[0].isOn);
                     break;
                 case 5:
                     AI_MakerSearch.category = Tools.SearchCategory.Extra;
