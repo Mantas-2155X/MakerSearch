@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KK_MakerSearch", "KK_MakerS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC_MakerSearch", "EC_MakerSearch\EC_MakerSearch.csproj", "{7EEC5305-40E4-4D5E-81C1-C83E8EB3A729}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PH_MakerSearch", "PH_MakerSearch\PH_MakerSearch.csproj", "{FAD62912-C9B0-432D-9B70-463E53C249D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{7EEC5305-40E4-4D5E-81C1-C83E8EB3A729}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EEC5305-40E4-4D5E-81C1-C83E8EB3A729}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EEC5305-40E4-4D5E-81C1-C83E8EB3A729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAD62912-C9B0-432D-9B70-463E53C249D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAD62912-C9B0-432D-9B70-463E53C249D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAD62912-C9B0-432D-9B70-463E53C249D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAD62912-C9B0-432D-9B70-463E53C249D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

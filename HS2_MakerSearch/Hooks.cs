@@ -1,8 +1,8 @@
 using HarmonyLib;
 
-using AIChara;
 using CharaCustom;
 using SuperScrollView;
+using UnityEngine.UI;
 
 namespace HS2_MakerSearch
 {
@@ -131,12 +131,10 @@ namespace HS2_MakerSearch
         private static void CvsBase_ChangeMenuFunc_ResetSearch() => Tools.ResetSearch();
         
         [HarmonyPostfix, HarmonyPatch(typeof(CvsA_Slot), "ChangeMenuFunc")]
-        private static void CvsA_Slot_ChangeMenuFunc_ResetSearch(CvsA_Slot __instance)
+        private static void CvsA_Slot_ChangeMenuFunc_ResetSearch(Toggle[] ___tglType)
         {
-            var nowAcs = Traverse.Create(__instance).Property("nowAcs").GetValue<ChaFileAccessory>();
-            
             var obj = Tools.fields[2].gameObject;
-            obj.SetActive(nowAcs.parts[__instance.SNo].type != 350);
+            obj.SetActive(!___tglType[0].isOn);
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CvsA_Slot), "ChangeAcsType")]
