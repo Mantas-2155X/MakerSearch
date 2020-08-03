@@ -25,6 +25,43 @@ namespace KK_MakerSearch
             var parent = GameObject.Find("CustomScene/CustomRoot/FrontUIGroup/CustomUIGroup/CvsMenuTree");
             var inputField = parent.transform.Find("02_HairTop/tglFront/FrontTop/sldTemp/InputField");
 
+            // Face
+            {
+                var faceObj = parent.transform.Find("00_FaceTop");
+                var face = faceObj.GetComponent<CustomChangeFaceMenu>();
+
+                var trav = Traverse.Create(face);
+                
+                var cvsItems = new []
+                {
+                    Singleton<CvsFaceAll>.Instance.gameObject,
+                    trav.Field("cvsEyebrow").GetValue<CvsEyebrow>().gameObject,
+                    trav.Field("cvsEye01").GetValue<CvsEye01>().gameObject,
+                    trav.Field("cvsEye02").GetValue<CvsEye02>().gameObject,
+                    Singleton<CvsNose>.Instance.gameObject,
+                    trav.Field("cvsMouth").GetValue<CvsMouth>().gameObject,
+                    trav.Field("cvsMole").GetValue<CvsMole>().gameObject,
+                    trav.Field("cvsMakeup").GetValue<CvsMakeup>().gameObject
+                };
+                
+                foreach (var ctrl in cvsItems)
+                {
+                    for (var i = 0; i < ctrl.transform.childCount; i++)
+                    {
+                        var child = ctrl.transform.GetChild(i);
+                        
+                        if(!child.name.Contains("win"))
+                            continue;
+
+                        if (!child.name.Contains("Kind") && !child.name.Contains("Layout")) 
+                            continue;
+                        
+                        var window = child.Find("customSelectWindow");
+                        SetupSearchBar(window, inputField);
+                    }
+                }
+            }
+            
             // Body
             {
                 var bodyObj = parent.transform.Find("01_BodyTop");

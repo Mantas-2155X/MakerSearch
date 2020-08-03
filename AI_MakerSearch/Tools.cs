@@ -14,7 +14,7 @@ namespace AI_MakerSearch
 {
     public static class Tools
     {
-        public static readonly InputField[] fields = new InputField[9];
+        public static readonly InputField[] fields = new InputField[19];
         
         private static readonly string[] targets =
         {
@@ -27,6 +27,16 @@ namespace AI_MakerSearch
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Nip/Setting/Setting01",                       // Body Nip
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Underhair/Setting/Setting01",                 // Body Underhair
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinBody/B_Paint/Setting/Setting01",                     // Body Paint
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_Mole/Setting/Setting01",                      // Face Mole
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_EyeLR/Setting/Setting01",                     // Face Eye Iris
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_EyeLR/Setting/Setting03",                     // Face Eye Pupil
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_EyeHL/Setting/Setting01",                     // Face Highlight
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_Eyebrow/Setting/Setting01",                   // Face Eyebrow
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_Eyelashes/Setting/Setting01",                 // Face Eyelash
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupEyeshadow/Setting/Setting01",           // Face Eyeshadow
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupCheek/Setting/Setting01",               // Face Cheek
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupLip/Setting/Setting01",                 // Face Lip
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupPaint/Setting/Setting01",               // Face Paint
         };
  
         public static void CreateUI()
@@ -135,8 +145,66 @@ namespace AI_MakerSearch
         {
             switch (category)
             {
-                case SearchCategory.Face:
-                    return false;
+                case SearchCategory.FaceEyeIris:
+                    var listFIris = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeblack);
+                    Traverse.Create(AI_MakerSearch.cvsEye).Field("sscBlackType").Method("CreateList", listFIris).GetValue();
+
+                    AI_MakerSearch.cvsEye.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceEyePupil:
+                    var listFPupil = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye);
+                    Traverse.Create(AI_MakerSearch.cvsEye).Field("sscPupilType").Method("CreateList", listFPupil).GetValue();
+
+                    AI_MakerSearch.cvsEye.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceMole:
+                    var listFMole = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_mole);
+                    Traverse.Create(AI_MakerSearch.cvsMole).Field("sscMole").Method("CreateList", listFMole).GetValue();
+
+                    AI_MakerSearch.cvsMole.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceHighlight:
+                    var listFHighlight = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye_hl);
+                    Traverse.Create(AI_MakerSearch.cvsHighlight).Field("sscEyeHLType").Method("CreateList", listFHighlight).GetValue();
+
+                    AI_MakerSearch.cvsHighlight.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceEyebrow:
+                    var listFEyebrow = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyebrow);
+                    Traverse.Create(AI_MakerSearch.cvsEyebrow).Field("sscEyebrowType").Method("CreateList", listFEyebrow).GetValue();
+
+                    AI_MakerSearch.cvsEyebrow.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceEyelash:
+                    var listFEyelash = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyelash);
+                    Traverse.Create(AI_MakerSearch.cvsEyelash).Field("sscEyelashesType").Method("CreateList", listFEyelash).GetValue();
+
+                    AI_MakerSearch.cvsEyelash.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceEyeshadow:
+                    var listFEyeshadow = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeshadow);
+                    Traverse.Create(AI_MakerSearch.cvsEyeshadow).Field("sscEyeshadowType").Method("CreateList", listFEyeshadow).GetValue();
+
+                    AI_MakerSearch.cvsEyelash.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceCheek:
+                    var listFCheek = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_cheek);
+                    Traverse.Create(AI_MakerSearch.cvsCheek).Field("sscCheekType").Method("CreateList", listFCheek).GetValue();
+
+                    AI_MakerSearch.cvsEyelash.UpdateCustomUI();
+                    break;
+                case SearchCategory.FaceLip:
+                    var listFLip = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_lip);
+                    Traverse.Create(AI_MakerSearch.cvsLip).Field("sscLipType").Method("CreateList", listFLip).GetValue();
+
+                    AI_MakerSearch.cvsEyelash.UpdateCustomUI();
+                    break;
+                case SearchCategory.FacePaint:
+                    var listFPaint = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint);
+                    Traverse.Create(AI_MakerSearch.cvsFacePaint).Field("sscPaintType").Method("CreateList", listFPaint).GetValue();
+
+                    AI_MakerSearch.cvsEyelash.UpdateCustomUI();
+                    break;
                 case SearchCategory.BodySkin:
                     var listBSkin = CvsBase.CreateSelectList(AI_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_skin_b : ChaListDefine.CategoryNo.ft_skin_b);
                     Traverse.Create(AI_MakerSearch.cvsSkin).Field("sscSkinType").Method("CreateList", listBSkin).GetValue();
@@ -216,7 +284,16 @@ namespace AI_MakerSearch
 
         public enum SearchCategory
         {
-            Face,
+            FaceMole,
+            FaceEyePupil,
+            FaceEyeIris,
+            FaceHighlight,
+            FaceEyebrow,
+            FaceEyelash,
+            FaceEyeshadow,
+            FaceCheek,
+            FaceLip,
+            FacePaint,
             BodySkin,
             BodyDetail,
             BodySunburn,

@@ -2,6 +2,7 @@ using HarmonyLib;
 
 using CharaCustom;
 using SuperScrollView;
+
 using UnityEngine.UI;
 
 namespace AI_MakerSearch
@@ -12,13 +13,27 @@ namespace AI_MakerSearch
         private static void CustomControl_Initialize_SetVars(CustomControl __instance)
         {
             AI_MakerSearch.cvsHair = Singleton<CvsH_Hair>.Instance;
+            
             AI_MakerSearch.cvsClothes = Singleton<CvsC_Clothes>.Instance;
+            
             AI_MakerSearch.cvsAccessories = Singleton<CvsA_Slot>.Instance;
+            
             AI_MakerSearch.cvsSkin = Singleton<CvsB_Skin>.Instance;
             AI_MakerSearch.cvsSunburn = Singleton<CvsB_Sunburn>.Instance;
             AI_MakerSearch.cvsNip = Singleton<CvsB_Nip>.Instance;
             AI_MakerSearch.cvsUnderhair = Singleton<CvsB_Underhair>.Instance;
             AI_MakerSearch.cvsPaint = Singleton<CvsB_Paint>.Instance;
+            
+            AI_MakerSearch.cvsMole = Singleton<CvsF_Mole>.Instance;
+            AI_MakerSearch.cvsEye = Singleton<CvsF_EyeLR>.Instance;
+            AI_MakerSearch.cvsHighlight = Singleton<CvsF_EyeHL>.Instance;
+            AI_MakerSearch.cvsEyebrow = Singleton<CvsF_Eyebrow>.Instance;
+            AI_MakerSearch.cvsEyelash = Singleton<CvsF_Eyelashes>.Instance;
+
+            AI_MakerSearch.cvsEyeshadow = Singleton<CvsF_MakeupEyeshadow>.Instance;
+            AI_MakerSearch.cvsCheek = Singleton<CvsF_MakeupCheek>.Instance;
+            AI_MakerSearch.cvsLip = Singleton<CvsF_MakeupLip>.Instance;
+            AI_MakerSearch.cvsFacePaint = Singleton<CvsF_MakeupPaint>.Instance;
             
             AI_MakerSearch.sex = Traverse.Create(__instance).Property("chaCtrl").Property("sex").GetValue<byte>();
             
@@ -26,6 +41,11 @@ namespace AI_MakerSearch
 
             // Switch between body Skin and Detail
             AI_MakerSearch.cvsSkin.items[0].tglItem.onValueChanged.AddListener(on => CvsB_Skin_ChangeMenuFunc_SetMainCat());
+            AI_MakerSearch.cvsSkin.items[1].tglItem.onValueChanged.AddListener(on => CvsB_Skin_ChangeMenuFunc_SetMainCat());
+            
+            // Switch between eye Iris and Pupil
+            AI_MakerSearch.cvsEye.items[0].tglItem.onValueChanged.AddListener(on => CvsF_EyeLR_ChangeMenuFunc_SetMainCat());
+            AI_MakerSearch.cvsEye.items[2].tglItem.onValueChanged.AddListener(on => CvsF_EyeLR_ChangeMenuFunc_SetMainCat());
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CustomChangeMainMenu), "ChangeWindowSetting")]
@@ -35,9 +55,6 @@ namespace AI_MakerSearch
             
             switch (no)
             {
-                case 0:
-                    AI_MakerSearch.category = Tools.SearchCategory.Face;
-                    return;
                 case 2:
                     AI_MakerSearch.category = Tools.SearchCategory.Hair;
                     AI_MakerSearch.controller = Traverse.Create(AI_MakerSearch.cvsHair).Field("sscHairType").GetValue<CustomSelectScrollController>();
@@ -124,6 +141,117 @@ namespace AI_MakerSearch
             Tools.ResetSearch();
             
             AI_MakerSearch.category = Tools.SearchCategory.BodyPaint;
+            AI_MakerSearch.controller = ___sscPaintType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_EyeLR), "ChangeMenuFunc")]
+        private static void CvsF_EyeLR_ChangeMenuFunc_SetMainCat()
+        {
+            Tools.ResetSearch();
+            
+            // Reversed 2 and 0 because of whatever reason it doesn't work
+            switch (AI_MakerSearch.cvsEye.GetSelectTab())
+            {
+                case 2:
+                    AI_MakerSearch.category = Tools.SearchCategory.FaceEyeIris;
+                    AI_MakerSearch.controller = Traverse.Create(AI_MakerSearch.cvsEye).Field("sscBlackType").GetValue<CustomSelectScrollController>();
+                    
+                    break;
+                case 0:
+                    AI_MakerSearch.category = Tools.SearchCategory.FaceEyePupil;
+                    AI_MakerSearch.controller = Traverse.Create(AI_MakerSearch.cvsEye).Field("sscPupilType").GetValue<CustomSelectScrollController>();
+                    
+                    break;
+            }
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_EyeHL), "ChangeMenuFunc")]
+        private static void CvsF_EyeHL_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscEyeHLType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceHighlight;
+            AI_MakerSearch.controller = ___sscEyeHLType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_Eyebrow), "ChangeMenuFunc")]
+        private static void CvsF_Eyebrow_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscEyebrowType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceEyebrow;
+            AI_MakerSearch.controller = ___sscEyebrowType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_Eyelashes), "ChangeMenuFunc")]
+        private static void CvsF_Eyelashes_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscEyelashesType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceEyelash;
+            AI_MakerSearch.controller = ___sscEyelashesType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_Mole), "ChangeMenuFunc")]
+        private static void CvsF_Mole_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscMole)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceMole;
+            AI_MakerSearch.controller = ___sscMole;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_MakeupCheek), "ChangeMenuFunc")]
+        private static void CvsF_MakeupCheek_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscCheekType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceCheek;
+            AI_MakerSearch.controller = ___sscCheekType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_MakeupEyeshadow), "ChangeMenuFunc")]
+        private static void CvsF_MakeupEyeshadow_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscEyeshadowType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceEyeshadow;
+            AI_MakerSearch.controller = ___sscEyeshadowType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_MakeupLip), "ChangeMenuFunc")]
+        private static void CvsF_MakeupLip_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscLipType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FaceLip;
+            AI_MakerSearch.controller = ___sscLipType;
+            
+            AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CvsF_MakeupPaint), "ChangeMenuFunc")]
+        private static void CvsF_MakeupPaint_ChangeMenuFunc_SetMainCat(CustomSelectScrollController ___sscPaintType)
+        {
+            Tools.ResetSearch();
+            
+            AI_MakerSearch.category = Tools.SearchCategory.FacePaint;
             AI_MakerSearch.controller = ___sscPaintType;
             
             AI_MakerSearch.view = AI_MakerSearch.controller.GetComponent<LoopListView2>();
