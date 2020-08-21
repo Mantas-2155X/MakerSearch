@@ -1,10 +1,11 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 
 using HarmonyLib;
 
 using BepInEx;
 using BepInEx.Configuration;
+
+using UnityEngine.UI;
 
 namespace PH_MakerSearch
 {
@@ -16,6 +17,9 @@ namespace PH_MakerSearch
         public const string VERSION = "1.1.1";
 
         public static string searchString;
+        
+        public static InputField input;
+        public static ThumbnailSelectUI selectUI;
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
@@ -31,7 +35,16 @@ namespace PH_MakerSearch
         
         public static void Search()
         {
-            
+            Tools.ResetDisables();
+
+            if (searchString == "")
+                return;
+
+            var trav = Traverse.Create(selectUI);
+            var datas = trav.Field("cells").GetValue<ThumbnailSelectCell[]>();
+
+            foreach (var data in datas.Where(data => !Tools.ItemMatchesSearch(data, searchString)))
+                data.gameObject.SetActive(false);
         }
     }
 }
