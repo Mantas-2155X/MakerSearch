@@ -67,7 +67,7 @@ namespace PH_MakerSearch
             var searchIn = Traverse.Create(data).Field("nameText").GetValue<Text>().text;
 
             if (PH_MakerSearch.useTranslatedCache.Value)
-                AutoTranslator.Default.TranslateAsync(searchIn, result => { searchIn = result.Succeeded ? result.TranslatedText : searchIn; });
+                TranslationHelper.Translate(data.name, s => { searchIn = s; });
 
             var rule = StringComparison.Ordinal;
             if (!PH_MakerSearch.caseSensitive.Value)

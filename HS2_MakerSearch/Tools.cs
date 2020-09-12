@@ -112,7 +112,7 @@ namespace HS2_MakerSearch
                     searchIn = data.name;
                     
                     if (HS2_MakerSearch.useTranslatedCache.Value)
-                        AutoTranslator.Default.TranslateAsync(data.name, result => { searchIn = result.Succeeded ? result.TranslatedText : data.name; });
+                        TranslationHelper.Translate(data.name, s => { searchIn = s; });
 
                     break;
                 case SearchBy.AssetBundle:
