@@ -16,9 +16,12 @@ namespace EC_MakerSearch
         private static void CustomSelectListCtrl_UpdateStateNew_ChangeController(CustomSelectListCtrl __instance)
         {
             Tools.ResetSearch();
+
+            if (!__instance.canvasGrp[0].interactable) 
+                return;
             
-            if(__instance.canvasGrp[0].interactable)
-                EC_MakerSearch.ctrl = __instance;
+            EC_MakerSearch.ctrl = __instance;
+            Tools.RememberDisvisibles();
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomAcsSelectKind), "UpdateCustomUI")]
@@ -27,6 +30,7 @@ namespace EC_MakerSearch
             Tools.ResetSearch();
             
             EC_MakerSearch.ctrl = ___listCtrl;
+            Tools.RememberDisvisibles();
         }
     }
 }

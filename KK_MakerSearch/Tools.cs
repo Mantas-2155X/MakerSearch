@@ -10,13 +10,12 @@ using ChaCustom;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-using XUnity.AutoTranslator.Plugin.Core;
-
 namespace KK_MakerSearch
 {
     public static class Tools
     {
         private static List<TMP_InputField> fields;
+        private static readonly HashSet<CustomSelectInfo> disvisibleMemory = new HashSet<CustomSelectInfo>();
 
         public static void CreateUI()
         {
@@ -198,7 +197,7 @@ namespace KK_MakerSearch
                     searchIn = data.name;
                     
                     if (KK_MakerSearch.useTranslatedCache.Value)
-                        AutoTranslator.Default.TranslateAsync(data.name, result => { searchIn = result.Succeeded ? result.TranslatedText : data.name; });
+                        TranslationHelper.Translate(data.name, s => { searchIn = s; });
 
                     break;
                 case SearchBy.AssetBundle:
@@ -239,7 +238,18 @@ namespace KK_MakerSearch
             var datas = trav.Field("lstSelectInfo").GetValue<List<CustomSelectInfo>>();
 
             foreach (var t in datas)
-                t.sic.Disvisible(t.disvisible);
+                KK_MakerSearch.ctrl.DisvisibleItem(t.index, disvisibleMemory.Contains(t));
+        }
+
+        public static void RememberDisvisibles()
+        {
+            disvisibleMemory.Clear();
+            
+            var trav = Traverse.Create(KK_MakerSearch.ctrl);
+            var datas = trav.Field("lstSelectInfo").GetValue<List<CustomSelectInfo>>();
+
+            foreach (var t in datas.Where(t => t.disvisible))
+                disvisibleMemory.Add(t);
         }
         
         public enum SearchBy

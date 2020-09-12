@@ -16,9 +16,12 @@ namespace KK_MakerSearch
         private static void CustomSelectListCtrl_UpdateStateNew_ChangeController(CustomSelectListCtrl __instance)
         {
             Tools.ResetSearch();
+
+            if (!__instance.canvasGrp[0].interactable) 
+                return;
             
-            if(__instance.canvasGrp[0].interactable)
-                KK_MakerSearch.ctrl = __instance;
+            KK_MakerSearch.ctrl = __instance;
+            Tools.RememberDisvisibles();
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomAcsSelectKind), "UpdateCustomUI")]
@@ -27,6 +30,7 @@ namespace KK_MakerSearch
             Tools.ResetSearch();
             
             KK_MakerSearch.ctrl = ___listCtrl;
+            Tools.RememberDisvisibles();
         }
     }
 }

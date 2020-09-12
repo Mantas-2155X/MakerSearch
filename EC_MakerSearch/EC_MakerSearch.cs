@@ -45,8 +45,8 @@ namespace EC_MakerSearch
             var trav = Traverse.Create(ctrl);
             var datas = trav.Field("lstSelectInfo").GetValue<List<CustomSelectInfo>>();
 
-            foreach (var data in datas.Where(data => !Tools.ItemMatchesSearch(data, searchString)))
-                data.sic.Disvisible(true);
+            foreach (var t in datas.Where(t => !Tools.ItemMatchesSearch(t, searchString)))
+                ctrl.DisvisibleItem(t.index, true);
         }
     }
 }
