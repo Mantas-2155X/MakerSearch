@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System.IO;
+
+using HarmonyLib;
 
 using BepInEx;
 using BepInEx.Configuration;
@@ -15,6 +17,7 @@ namespace PH_MakerSearch
         public const string VERSION = "1.3.0";
 
         public static string searchString;
+        public static string TranslationCachePath;
         
         public static InputField input;
         public static ThumbnailSelectUI selectUI;
@@ -29,6 +32,8 @@ namespace PH_MakerSearch
 
             var harmony = new Harmony(nameof(PH_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
+            
+            TranslationCachePath = Path.Combine(Paths.CachePath, "PH_MakerSearch.cache");
         }
         
         public static void Search()

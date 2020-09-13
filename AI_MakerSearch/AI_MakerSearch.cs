@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 using BepInEx;
 using BepInEx.Configuration;
@@ -21,7 +22,8 @@ namespace AI_MakerSearch
 
         public static bool isSteam;
         public static string searchString;
-        
+        public static string TranslationCachePath;
+
         public static CvsH_Hair cvsHair;
         
         public static CvsC_Clothes cvsClothes;
@@ -69,6 +71,8 @@ namespace AI_MakerSearch
             harmony.PatchAll(typeof(Hooks));
             
             isSteam = Application.productName == "AI-Shoujo";
+            
+            TranslationCachePath = Path.Combine(Paths.CachePath, "AI_MakerSearch.cache");
         }
 
         public static void Search()

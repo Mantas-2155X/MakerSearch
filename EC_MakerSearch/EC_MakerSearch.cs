@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Collections.Generic;
+
 using HarmonyLib;
 
 using BepInEx;
@@ -16,7 +18,8 @@ namespace EC_MakerSearch
         public const string VERSION = "1.3.0";
 
         public static string searchString;
-        
+        public static string TranslationCachePath;
+
         public static CustomSelectListCtrl ctrl;
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
@@ -32,6 +35,8 @@ namespace EC_MakerSearch
 
             var harmony = new Harmony(nameof(EC_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
+            
+            TranslationCachePath = Path.Combine(Paths.CachePath, "EC_MakerSearch.cache");
         }
         
         public static void Search()

@@ -1,5 +1,6 @@
 using System.Linq;
-using System.Threading;
+using System.Collections;
+
 using HarmonyLib;
 
 using CharaCustom;
@@ -53,25 +54,39 @@ namespace HS2_MakerSearch
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectScrollController), "CreateList")]
-        private static void CustomSelectScrollController_CreateList_TranslateItems(CustomSelectScrollController.ScrollData[]  ___scrollerDatas)
+        private static void CustomSelectScrollController_CreateList_TranslateItems(CustomSelectScrollController __instance, CustomSelectScrollController.ScrollData[]  ___scrollerDatas)
         {
             if (___scrollerDatas == null)
                 return;
 
-            var t = new Thread(TranslateItems)
+            IEnumerator TranslateItems()
             {
-                IsBackground = true,
-                Name = "Translate items",
-                Priority = ThreadPriority.BelowNormal
-            };
-            
-            t.Start();
+                var cacheDict = Cacher.CacheToDict(Cacher.ReadCache());
 
-            void TranslateItems()
-            {
+                var pushed = 0;
+                
                 foreach (var info in ___scrollerDatas.Where(info => !Tools.searchNameStrings.ContainsKey(info.info)))
+                {
+                    if (cacheDict.ContainsKey(info.info.name))
+                    {
+                        Tools.searchNameStrings[info.info] = info.info.name + "/v" + cacheDict[info.info.name];
+                        continue;
+                    }
+                    
                     TranslationHelper.Translate(info.info.name, s => Tools.searchNameStrings[info.info] = info.info.name + "/v" + s);
+                    
+                    if (pushed++ < 50) 
+                        continue;
+                    
+                    pushed = 0;
+                    
+                    yield return null;
+                }
+                
+                Cacher.WriteCache();
             }
+            
+            __instance.StartCoroutine(TranslateItems());
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomChangeMainMenu), "ChangeWindowSetting")]

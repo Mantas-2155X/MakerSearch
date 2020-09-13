@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 using BepInEx;
 using BepInEx.Configuration;
@@ -19,7 +20,8 @@ namespace HS2_MakerSearch
         public const string VERSION = "1.3.0";
 
         public static string searchString;
-        
+        public static string TranslationCachePath;
+
         public static CvsH_Hair cvsHair;
         
         public static CvsC_Clothes cvsClothes;
@@ -65,6 +67,8 @@ namespace HS2_MakerSearch
             
             var harmony = new Harmony(nameof(HS2_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
+            
+            TranslationCachePath = Path.Combine(Paths.CachePath, "HS2_MakerSearch.cache");
         }
 
         public static void Search()
