@@ -11,7 +11,7 @@ namespace PH_MakerSearch
 {
     public static class Tools
     {
-        public static readonly Dictionary<ThumbnailSelectCell, string> searchNameStrings = new Dictionary<ThumbnailSelectCell, string>();
+        public static readonly Dictionary<string, string> searchNameStrings = new Dictionary<string, string>();
         
         public static void CreateUI(EditMode mode, MoveableThumbnailSelectUI itemSelectUI)
         {
@@ -63,12 +63,12 @@ namespace PH_MakerSearch
             PH_MakerSearch.input = input;
         }
         
-        public static bool ItemMatchesSearch(ThumbnailSelectCell data, string searchStr, int idx)
+        public static bool ItemMatchesSearch(string searchStr, int idx)
         {
             var searchIn = Traverse.Create(PH_MakerSearch.selectUI).Field("datas").GetValue<List<CustomSelectSet>>()[idx].name;
 
             if (PH_MakerSearch.useTranslatedCache.Value)
-                searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : searchIn;
+                searchIn = searchNameStrings.TryGetValue(searchIn, out var cachedTranslation) ? cachedTranslation : searchIn;
 
             var rule = StringComparison.Ordinal;
             if (!PH_MakerSearch.caseSensitive.Value)

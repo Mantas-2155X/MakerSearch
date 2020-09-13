@@ -33,19 +33,7 @@ namespace PH_MakerSearch
         {
             try
             {
-                var newCache = new List<TranslationCacheEntry>();
-
-                foreach (var pair in Tools.searchNameStrings)
-                {
-                    var entry = new TranslationCacheEntry {OriginalName = pair.Key.name, TranslatedName = pair.Value};
-                    
-                    if(newCache.Contains(entry))
-                        continue;
-
-                    newCache.Add(entry);
-                }
-
-                Cache = newCache;
+                Cache = SetCache();
                 
                 var data = MessagePackSerializer.Serialize(Cache);
                 File.WriteAllBytes(PH_MakerSearch.TranslationCachePath, data);
@@ -67,6 +55,23 @@ namespace PH_MakerSearch
                 dict.Add(entry.OriginalName, entry.TranslatedName);
 
             return dict;
+        }
+
+        public static List<TranslationCacheEntry> SetCache()
+        {
+            var newCache = new List<TranslationCacheEntry>();
+
+            foreach (var pair in Tools.searchNameStrings)
+            {
+                var entry = new TranslationCacheEntry {OriginalName = pair.Key, TranslatedName = pair.Value};
+                    
+                if(newCache.Contains(entry))
+                    continue;
+
+                newCache.Add(entry);
+            }
+
+            return newCache;
         }
     }
     

@@ -10,14 +10,13 @@ namespace PH_MakerSearch
         [HarmonyPostfix, HarmonyPatch(typeof(EditMode), "Setup")]
         private static void EditMode_Setup_CreateUI(EditMode __instance, MoveableThumbnailSelectUI ___itemSelectUI)
         {
-            Tools.searchNameStrings.Clear();
             Tools.CreateUI(__instance, ___itemSelectUI);
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(ThumbnailSelectUI), "SetupCells")]
-        private static void CustomSelectListCtrl_SetupCells_GetSelectInfos(ThumbnailSelectUI __instance, ThumbnailSelectCell[] ___cells, List<CustomSelectSet> ___datas)
+        private static void CustomSelectListCtrl_SetupCells_GetSelectInfos(List<CustomSelectSet> ___datas)
         {
-            if (___cells == null)
+            if (___datas == null)
                 return;
 
             IEnumerator TranslateItems()
@@ -28,14 +27,14 @@ namespace PH_MakerSearch
                 
                 for (var i = 0; i < ___datas.Count; i++)
                 {
-                    if (cacheDict.ContainsKey(___cells[i].name))
+                    if (cacheDict.ContainsKey(___datas[i].name))
                     {
-                        Tools.searchNameStrings[___cells[i]] = ___cells[i].name + "/v" + cacheDict[___cells[i].name];
+                        Tools.searchNameStrings[___datas[i].name] = ___datas[i].name + "/v" + cacheDict[___datas[i].name];
                         continue;
                     }
 
                     var idx = i;
-                    TranslationHelper.Translate(___datas[i].name, s => Tools.searchNameStrings[___cells[idx]] = ___datas[idx].name + "/v" + s);
+                    TranslationHelper.Translate(___datas[i].name, s => Tools.searchNameStrings[___datas[idx].name] = ___datas[idx].name + "/v" + s);
                     
                     if (pushed++ < 50) 
                         continue;
@@ -44,11 +43,10 @@ namespace PH_MakerSearch
                     
                     yield return null;
                 }
-
-                Cacher.WriteCache();
             }
             
-            __instance.StartCoroutine(TranslateItems());
+            PH_MakerSearch.instance.StartCoroutine(TranslateItems());
+            Cacher.SetCache();
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(MoveableThumbnailSelectUI), "UpdateEnables")]

@@ -16,6 +16,8 @@ namespace PH_MakerSearch
     {
         public const string VERSION = "1.3.0";
 
+        public static PH_MakerSearch instance;
+        
         public static string searchString;
         public static string TranslationCachePath;
         
@@ -27,6 +29,8 @@ namespace PH_MakerSearch
 
         private void Awake()
         {
+            instance = this;
+            
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
 
@@ -47,8 +51,13 @@ namespace PH_MakerSearch
             var datas = trav.Field("cells").GetValue<ThumbnailSelectCell[]>();
 
             for (var i = 0; i < datas.Length; i++)
-                if(!Tools.ItemMatchesSearch(datas[i], searchString, i))
+                if(!Tools.ItemMatchesSearch(searchString, i))
                     datas[i].gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            Cacher.WriteCache();
         }
     }
 }
