@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using HarmonyLib;
-using XUnity.AutoTranslator.Plugin.Core;
 
 namespace HS2_MakerSearch
 {

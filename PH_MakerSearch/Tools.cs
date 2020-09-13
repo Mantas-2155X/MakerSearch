@@ -6,8 +6,6 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-using XUnity.AutoTranslator.Plugin.Core;
-
 namespace PH_MakerSearch
 {
     public static class Tools
