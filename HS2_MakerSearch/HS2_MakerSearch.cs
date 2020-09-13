@@ -16,7 +16,7 @@ namespace HS2_MakerSearch
     [BepInPlugin(nameof(HS2_MakerSearch), nameof(HS2_MakerSearch), VERSION)]
     public class HS2_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.2.1";
+        public const string VERSION = "1.3.0";
 
         public static string searchString;
         
