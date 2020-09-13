@@ -40,6 +40,10 @@
           <HintPath>..\..\..\libs\Game\KK\Assembly-CSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\libs\Game\KK\Assembly-CSharp-firstpass.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="BepInEx">
           <HintPath>..\..\..\libs\GitHub\BepInEx\latest\BepInEx\core\BepInEx.dll</HintPath>
             <Private>False</Private>
@@ -70,6 +74,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Cacher.cs" />
         <Compile Include="Hooks.cs" />
         <Compile Include="KK_MakerSearch.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

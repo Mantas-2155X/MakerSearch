@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Collections;
+using System.Collections.Generic;
+
 using HarmonyLib;
 
 using ChaCustom;
@@ -15,30 +16,43 @@ namespace KK_MakerSearch
             KK_MakerSearch.ctrl = null;
             
             Tools.disvisibleMemory.Clear();
-            Tools.searchNameStrings.Clear();
             Tools.CreateUI();
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "Create")]
-        private static void CustomSelectListCtrl_Create_GetSelectInfos(List<CustomSelectInfo> ___lstSelectInfo)
+        private static void CustomSelectListCtrl_Create_GetSelectInfos(CustomSelectListCtrl __instance, List<CustomSelectInfo> ___lstSelectInfo)
         {
             if (___lstSelectInfo == null)
                 return;
-
-            var t = new Thread(TranslateItems)
-            {
-                IsBackground = true,
-                Name = "Translate items",
-                Priority = ThreadPriority.BelowNormal
-            };
             
-            t.Start();
-
-            void TranslateItems()
+            IEnumerator TranslateItems()
             {
+                var cacheDict = Cacher.CacheToDict(Cacher.ReadCache());
+
+                var pushed = 0;
+                
                 foreach (var info in ___lstSelectInfo.Where(info => !Tools.searchNameStrings.ContainsKey(info)))
+                {
+                    if (cacheDict.ContainsKey(info.name))
+                    {
+                        Tools.searchNameStrings[info] = info.name + "/v" + cacheDict[info.name];
+                        continue;
+                    }
+                    
                     TranslationHelper.Translate(info.name, s => Tools.searchNameStrings[info] = info.name + "/v" + s);
+                    
+                    if (pushed++ < 5) 
+                        continue;
+                    
+                    pushed = 0;
+                    
+                    yield return null;
+                }
+                
+                Cacher.WriteCache();
             }
+            
+            __instance.StartCoroutine(TranslateItems());
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "Update")]

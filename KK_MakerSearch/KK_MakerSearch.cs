@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
+
 using HarmonyLib;
 
 using BepInEx;
@@ -17,11 +20,13 @@ namespace KK_MakerSearch
         public const string VERSION = "1.3.0";
 
         public static string searchString;
+        public static string TranslationCachePath;
         
         public static CustomSelectListCtrl ctrl;
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
+        private static ConfigEntry<string> translationCachePath { get; set; }
         
         public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
         
@@ -29,10 +34,13 @@ namespace KK_MakerSearch
         {
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
+            translationCachePath = Config.Bind(new ConfigDefinition("General", "Translation cache path"), "..\\..\\config\\KK_MakerSearch.cache");
             searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
 
             var harmony = new Harmony(nameof(KK_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
+
+            TranslationCachePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + translationCachePath.Value;
         }
         
         public static void Search()
