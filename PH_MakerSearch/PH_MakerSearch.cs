@@ -14,7 +14,7 @@ namespace PH_MakerSearch
     [BepInPlugin(nameof(PH_MakerSearch), nameof(PH_MakerSearch), VERSION)]
     public class PH_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.3.0";
+        public const string VERSION = "1.3.1";
 
         public static PH_MakerSearch instance;
         
