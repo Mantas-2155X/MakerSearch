@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using HarmonyLib;
+﻿using HarmonyLib;
 
 using BepInEx;
 using BepInEx.Configuration;
@@ -43,8 +41,9 @@ namespace PH_MakerSearch
             var trav = Traverse.Create(selectUI);
             var datas = trav.Field("cells").GetValue<ThumbnailSelectCell[]>();
 
-            foreach (var data in datas.Where(data => !Tools.ItemMatchesSearch(data, searchString)))
-                data.gameObject.SetActive(false);
+            for (var i = 0; i < datas.Length; i++)
+                if(!Tools.ItemMatchesSearch(datas[i], searchString, i))
+                    datas[i].gameObject.SetActive(false);
         }
     }
 }

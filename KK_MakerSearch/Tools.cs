@@ -16,6 +16,7 @@ namespace KK_MakerSearch
     {
         private static List<TMP_InputField> fields;
         public static readonly HashSet<CustomSelectInfo> disvisibleMemory = new HashSet<CustomSelectInfo>();
+        public static readonly Dictionary<CustomSelectInfo, string> searchNameStrings = new Dictionary<CustomSelectInfo, string>();
 
         public static void CreateUI()
         {
@@ -197,7 +198,7 @@ namespace KK_MakerSearch
                     searchIn = data.name;
                     
                     if (KK_MakerSearch.useTranslatedCache.Value)
-                        TranslationHelper.Translate(data.name, s => { searchIn = s; });
+                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
 
                     break;
                 case SearchBy.AssetBundle:

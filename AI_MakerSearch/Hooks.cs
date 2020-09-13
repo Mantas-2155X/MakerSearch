@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Threading;
 using HarmonyLib;
 
 using CharaCustom;
@@ -37,6 +39,8 @@ namespace AI_MakerSearch
             
             AI_MakerSearch.sex = Traverse.Create(__instance).Property("chaCtrl").Property("sex").GetValue<byte>();
             
+            Tools.searchNameStrings.Clear();
+
             Tools.CreateUI();
 
             // Switch between body Skin and Detail
@@ -48,6 +52,28 @@ namespace AI_MakerSearch
             AI_MakerSearch.cvsEye.items[2].tglItem.onValueChanged.AddListener(on => CvsF_EyeLR_ChangeMenuFunc_SetMainCat());
         }
 
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectScrollController), "CreateList")]
+        private static void CustomSelectScrollController_CreateList_TranslateItems(CustomSelectScrollController.ScrollData[]  ___scrollerDatas)
+        {
+            if (___scrollerDatas == null)
+                return;
+
+            var t = new Thread(TranslateItems)
+            {
+                IsBackground = true,
+                Name = "Translate items",
+                Priority = ThreadPriority.BelowNormal
+            };
+            
+            t.Start();
+
+            void TranslateItems()
+            {
+                foreach (var info in ___scrollerDatas.Where(info => !Tools.searchNameStrings.ContainsKey(info.info)))
+                    TranslationHelper.Translate(info.info.name, s => Tools.searchNameStrings[info.info] = info.info.name + "/v" + s);
+            }
+        }
+        
         [HarmonyPostfix, HarmonyPatch(typeof(CustomChangeMainMenu), "ChangeWindowSetting")]
         private static void CustomChangeMainMenu_ChangeWindowSetting_SetMainCat(int no)
         {

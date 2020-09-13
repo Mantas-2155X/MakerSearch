@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using HarmonyLib;
 
 using ChaCustom;
@@ -12,9 +15,32 @@ namespace EC_MakerSearch
             EC_MakerSearch.ctrl = null;
             
             Tools.disvisibleMemory.Clear();
+            Tools.searchNameStrings.Clear();
             Tools.CreateUI();
         }
 
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "Create")]
+        private static void CustomSelectListCtrl_Create_GetSelectInfos(List<CustomSelectInfo> ___lstSelectInfo)
+        {
+            if (___lstSelectInfo == null)
+                return;
+
+            var t = new Thread(TranslateItems)
+            {
+                IsBackground = true,
+                Name = "Translate items",
+                Priority = ThreadPriority.BelowNormal
+            };
+            
+            t.Start();
+
+            void TranslateItems()
+            {
+                foreach (var info in ___lstSelectInfo.Where(info => !Tools.searchNameStrings.ContainsKey(info)))
+                    TranslationHelper.Translate(info.name, s => Tools.searchNameStrings[info] = info.name + "/v" + s);
+            }
+        }
+        
         [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "Update")]
         private static void CustomSelectListCtrl_Update_ChangeController(CustomSelectListCtrl __instance)
         {

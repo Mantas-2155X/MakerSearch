@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using AIChara;
@@ -14,6 +15,7 @@ namespace HS2_MakerSearch
     public static class Tools
     {
         public static readonly InputField[] fields = new InputField[19];
+        public static readonly Dictionary<CustomSelectInfo, string> searchNameStrings = new Dictionary<CustomSelectInfo, string>();
         
         private static readonly string[] targets =
         {
@@ -111,7 +113,7 @@ namespace HS2_MakerSearch
                     searchIn = data.name;
                     
                     if (HS2_MakerSearch.useTranslatedCache.Value)
-                        TranslationHelper.Translate(data.name, s => { searchIn = s; });
+                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
 
                     break;
                 case SearchBy.AssetBundle:

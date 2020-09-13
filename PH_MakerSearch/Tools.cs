@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using HarmonyLib;
@@ -10,6 +11,8 @@ namespace PH_MakerSearch
 {
     public static class Tools
     {
+        public static readonly Dictionary<ThumbnailSelectCell, string> searchNameStrings = new Dictionary<ThumbnailSelectCell, string>();
+        
         public static void CreateUI(EditMode mode, MoveableThumbnailSelectUI itemSelectUI)
         {
             if(mode == null || itemSelectUI == null)
@@ -60,12 +63,12 @@ namespace PH_MakerSearch
             PH_MakerSearch.input = input;
         }
         
-        public static bool ItemMatchesSearch(ThumbnailSelectCell data, string searchStr)
+        public static bool ItemMatchesSearch(ThumbnailSelectCell data, string searchStr, int idx)
         {
-            var searchIn = Traverse.Create(data).Field("nameText").GetValue<Text>().text;
+            var searchIn = Traverse.Create(PH_MakerSearch.selectUI).Field("datas").GetValue<List<CustomSelectSet>>()[idx].name;
 
             if (PH_MakerSearch.useTranslatedCache.Value)
-                TranslationHelper.Translate(data.name, s => { searchIn = s; });
+                searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : searchIn;
 
             var rule = StringComparison.Ordinal;
             if (!PH_MakerSearch.caseSensitive.Value)
