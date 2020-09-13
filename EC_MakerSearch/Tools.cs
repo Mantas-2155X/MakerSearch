@@ -15,7 +15,7 @@ namespace EC_MakerSearch
     public static class Tools
     {
         private static List<TMP_InputField> fields;
-        private static readonly HashSet<CustomSelectInfo> disvisibleMemory = new HashSet<CustomSelectInfo>();
+        public static readonly HashSet<CustomSelectInfo> disvisibleMemory = new HashSet<CustomSelectInfo>();
 
         public static void CreateUI()
         {
