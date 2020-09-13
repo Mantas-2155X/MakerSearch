@@ -41,7 +41,7 @@ namespace KK_MakerSearch
                     
                     TranslationHelper.Translate(info.name, s => Tools.searchNameStrings[info] = info.name + "/v" + s);
                     
-                    if (pushed++ < 5) 
+                    if (pushed++ < 50) 
                         continue;
                     
                     pushed = 0;

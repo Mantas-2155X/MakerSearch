@@ -23,7 +23,7 @@ namespace KK_MakerSearch
             }
             catch (Exception e)
             {
-                Console.Write("Failed writing MakerSearch cache: " + e);
+                Console.Write("Failed reading MakerSearch cache: " + e);
             }
 
             return Cache ?? (Cache = new List<TranslationCacheEntry>());
