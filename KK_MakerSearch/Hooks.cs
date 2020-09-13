@@ -1,6 +1,7 @@
 using HarmonyLib;
 
 using ChaCustom;
+using UnityEngine;
 
 namespace KK_MakerSearch
 {
@@ -9,6 +10,9 @@ namespace KK_MakerSearch
         [HarmonyPostfix, HarmonyPatch(typeof(CustomControl), "Initialize")]
         private static void CustomControl_Initialize_CreateUI()
         {
+            if (KK_MakerSearch.DisableHiddenTabs)
+                KK_MakerSearch.acsGrp = Traverse.Create(Singleton<CustomAcsChangeSlot>.Instance).Field("cgAccessoryTop").GetValue<CanvasGroup>();
+
             KK_MakerSearch.ctrl = null;
             
             Tools.disvisibleMemory.Clear();
@@ -19,7 +23,21 @@ namespace KK_MakerSearch
         [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "Update")]
         private static void CustomSelectListCtrl_Update_ChangeController(CustomSelectListCtrl __instance)
         {
-            if (KK_MakerSearch.ctrl == __instance || !__instance.canvasGrp[0].interactable) 
+            if (!KK_MakerSearch.DisableHiddenTabs)
+                return;
+            
+            if (KK_MakerSearch.ctrl == __instance) 
+                return;
+
+            if (__instance.canvasGrp == null || __instance.canvasGrp.Length == 0)
+                return;
+
+            var win = __instance.canvasGrp[0];
+            
+            if (!win.name.Contains("win") || !win.interactable)
+                return;
+
+            if (win.name.Contains("Acs") && (KK_MakerSearch.acsGrp == null || !KK_MakerSearch.acsGrp.interactable))
                 return;
             
             Tools.ResetSearch();
