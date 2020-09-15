@@ -6,6 +6,7 @@ using HarmonyLib;
 
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace PH_MakerSearch
 {
@@ -22,18 +23,37 @@ namespace PH_MakerSearch
             
             var window = PH_MakerSearch.selectUI.transform.Find("Scroll View");
             var inputField = mode.transform.Find("Canvas/Body/Mains/General/CustomSliderUI(Clone)/InputField");
+            var resetButton = mode.transform.Find("Canvas/Originals/Button");
 
             var content = window.transform.Find("Viewport");
             var cRect = content.GetComponent<RectTransform>();
             cRect.offsetMin = new Vector2(cRect.offsetMin.x, 31);
             
-            var newInputField = UnityEngine.Object.Instantiate(inputField.gameObject, window);
+            var newInputField = Object.Instantiate(inputField.gameObject, window);
             newInputField.name = "Search";
 
             var rect = newInputField.GetComponent<RectTransform>();
             rect.offsetMin = new Vector2(-217, -286);
-            rect.offsetMax = new Vector2(-23, -261);
+            rect.offsetMax = new Vector2(-75, -261);
 
+            var resetCopy = Object.Instantiate(resetButton, window);
+            resetCopy.name = "Reset";
+            
+            Object.Destroy(resetCopy.GetComponent<LayoutElement>());
+            
+            var resetRect = resetCopy.GetComponent<RectTransform>();
+            resetRect.offsetMin = new Vector2(218, -578);
+            resetRect.offsetMax = new Vector2(60, 60);
+            
+            var bg = resetCopy.Find("Background");
+            
+            var bgRect = bg.GetComponent<RectTransform>();
+            bgRect.offsetMin = new Vector2(89, -319);
+            bgRect.offsetMax = new Vector2(139, -290);
+            
+            var resetText = resetCopy.GetComponentInChildren<Text>();
+            resetText.text = "Reset";
+            
             var input = newInputField.GetComponent<InputField>();
             input.contentType = InputField.ContentType.Standard;
             input.characterLimit = 64;
@@ -60,6 +80,30 @@ namespace PH_MakerSearch
                 PH_MakerSearch.Search();
             });
 
+            var button = resetCopy.GetComponent<Button>();
+
+            var oldColors = button.colors;
+            button.colors = new ColorBlock
+            {
+                colorMultiplier = oldColors.colorMultiplier,
+                disabledColor = oldColors.disabledColor,
+                fadeDuration = oldColors.fadeDuration,
+                highlightedColor = new Color(0.191f, 1, 0.933f, 0.5f),
+                normalColor = new Color(0.191f, 1, 0.933f, 0),
+                pressedColor = oldColors.pressedColor
+            };
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(delegate
+            {
+                input.text = "";
+                PH_MakerSearch.searchString = "";
+                PH_MakerSearch.Search();
+            });
+
+            var buttonRect = button.GetComponent<RectTransform>();
+            buttonRect.offsetMax = new Vector2(60, 60);
+            
             PH_MakerSearch.input = input;
         }
         

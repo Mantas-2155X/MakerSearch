@@ -43,6 +43,7 @@ namespace AI_MakerSearch
         public static void CreateUI()
         {
             var orig = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_ShapeWhole/Scroll View/Viewport/Content/SliderSet/SldInputField");
+            var resetButton = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinClothes/DefaultWin/C_Clothes/Setting/Setting01/DefaultColor");
 
             var i = 0;
             foreach (var targetStr in targets)
@@ -55,8 +56,8 @@ namespace AI_MakerSearch
                     var rectC = color.GetComponent<RectTransform>();
                     rectC.offsetMax = new Vector2(200, rectC.offsetMax.y);
                     
-                    var button = color.Find("Button");
-                    button.GetComponent<RectTransform>().offsetMax = new Vector2(200, 0);
+                    var cButton = color.Find("Button");
+                    cButton.GetComponent<RectTransform>().offsetMax = new Vector2(200, 0);
                 }
                 
                 var cp = UnityEngine.Object.Instantiate(orig, target.transform);
@@ -70,15 +71,25 @@ namespace AI_MakerSearch
 
                 var rect = cp.GetComponent<RectTransform>();
 
+                var resetCopy = UnityEngine.Object.Instantiate(resetButton, target.transform);
+                resetCopy.name = "Reset";
+            
+                var resetRect = resetCopy.GetComponent<RectTransform>();
+                resetRect.offsetMin = new Vector2(!AI_MakerSearch.isSteam ? 365 : 396, -420);
+                resetRect.offsetMax = new Vector2(!AI_MakerSearch.isSteam ? 615 : 646, -440);
+
+                var resetText = resetCopy.GetComponentInChildren<Text>();
+                resetText.text = "Reset";
+                
                 if (i == 1) // Clothes
                 {
-                    rect.offsetMin = new Vector2(-250, 3);
-                    rect.offsetMax = new Vector2(0, -383);
+                    rect.offsetMin = new Vector2(!AI_MakerSearch.isSteam ? -255 : -250, 3);
+                    rect.offsetMax = new Vector2(-60, -383);
                 } 
                 else
                 {
                     rect.offsetMin = new Vector2(AI_MakerSearch.isSteam ? -452 : -420, 3);
-                    rect.offsetMax = new Vector2(0, -383);
+                    rect.offsetMax = new Vector2(-60, -383);
 
                     var box = target.transform.Find("SelectBox");
                     var scrollview = box.Find("Scroll View");
@@ -104,6 +115,19 @@ namespace AI_MakerSearch
                     AI_MakerSearch.Search();
                 });
 
+                var button = resetCopy.GetComponentInChildren<Button>();
+
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(delegate
+                {
+                    input.text = "";
+                    AI_MakerSearch.searchString = "";
+                    AI_MakerSearch.Search();
+                });
+
+                var buttonRect = button.GetComponent<RectTransform>();
+                buttonRect.offsetMax = new Vector2(60, 60);
+                
                 fields[i] = input;
 
                 if (i == 2)

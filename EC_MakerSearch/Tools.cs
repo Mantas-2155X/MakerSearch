@@ -8,6 +8,8 @@ using TMPro;
 using ChaCustom;
 
 using UnityEngine;
+using UnityEngine.UI;
+
 using Object = UnityEngine.Object;
 
 namespace EC_MakerSearch
@@ -24,6 +26,7 @@ namespace EC_MakerSearch
             
             var parent = GameObject.Find("CustomScene/CustomRoot/FrontUIGroup/CustomUIGroup/CvsMenuTree");
             var inputField = parent.transform.Find("02_HairTop/tglFront/FrontTop/sldTemp/InputField");
+            var resetButton = parent.transform.Find("00_FaceTop/tglAll/AllTop/sldTemp/Button");
 
             // Face
             {
@@ -57,7 +60,7 @@ namespace EC_MakerSearch
                             continue;
                         
                         var window = child.Find("customSelectWindow");
-                        SetupSearchBar(window, inputField);
+                        SetupSearchBar(window, inputField, resetButton);
                     }
                 }
             }
@@ -91,7 +94,7 @@ namespace EC_MakerSearch
                             continue;
                         
                         var window = child.Find("customSelectWindow");
-                        SetupSearchBar(window, inputField);
+                        SetupSearchBar(window, inputField, resetButton);
                     }
                 }
             }
@@ -106,11 +109,11 @@ namespace EC_MakerSearch
                 foreach (var ctrl in cvsHair)
                 {
                     var window = ctrl.transform.Find("winHairKind/customSelectWindow");
-                    SetupSearchBar(window, inputField);
+                    SetupSearchBar(window, inputField, resetButton);
                 }
 
                 var cvsHairEtc = hairObj.Find("tglEtc/EtcTop").GetComponent<CvsHairEtc>();
-                SetupSearchBar(cvsHairEtc.transform.Find("winGlossKind/customSelectWindow"), inputField);
+                SetupSearchBar(cvsHairEtc.transform.Find("winGlossKind/customSelectWindow"), inputField, resetButton);
             }
             
             // Clothes
@@ -130,7 +133,7 @@ namespace EC_MakerSearch
                             continue;
                         
                         var window = child.Find("customSelectWindow");
-                        SetupSearchBar(window, inputField);
+                        SetupSearchBar(window, inputField, resetButton);
                     }
                 }
             }
@@ -145,12 +148,12 @@ namespace EC_MakerSearch
                 foreach (var kind in selectKinds)
                 {
                     var window = kind.transform.Find("customSelectWindow");
-                    SetupSearchBar(window, inputField);
+                    SetupSearchBar(window, inputField, resetButton);
                 }
             }
         }
 
-        private static void SetupSearchBar(Transform window, Transform inputField)
+        private static void SetupSearchBar(Transform window, Transform inputField, Transform resetButton)
         {
             var bg = window.Find("BasePanel/imgWindowBack");
             bg.GetComponent<RectTransform>().offsetMin = new Vector2(0, -10);
@@ -160,7 +163,7 @@ namespace EC_MakerSearch
 
             var rect = newInputField.GetComponent<RectTransform>();
             rect.offsetMin = new Vector2(-390, 0);
-            rect.offsetMax = new Vector2(-10, -610);
+            rect.offsetMax = new Vector2(-65, -610);
 
             var input = newInputField.GetComponent<TMP_InputField>();
             input.contentType = TMP_InputField.ContentType.Standard;
@@ -182,6 +185,23 @@ namespace EC_MakerSearch
             input.onEndEdit.AddListener(delegate(string text)
             {
                 EC_MakerSearch.searchString = text;
+                EC_MakerSearch.MakerSearch_Search();
+            });
+
+            var resetCopy = Object.Instantiate(resetButton, window);
+            resetCopy.name = "Reset";
+            
+            var resetRect = resetCopy.GetComponent<RectTransform>();
+            resetRect.offsetMin = new Vector2(-62, 0);
+            resetRect.offsetMax = new Vector2(-8, -610);
+            
+            var button = resetCopy.GetComponent<Button>();
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(delegate
+            {
+                input.text = "";
+                EC_MakerSearch.searchString = "";
                 EC_MakerSearch.MakerSearch_Search();
             });
             

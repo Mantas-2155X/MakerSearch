@@ -43,7 +43,8 @@ namespace HS2_MakerSearch
         public static void CreateUI()
         {
             var orig = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_ShapeWhole/Scroll View/Viewport/Content/SliderSet/SldInputField");
-
+            var resetButton = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinClothes/DefaultWin/C_Clothes/Setting/Setting01/DefaultColor");
+            
             var i = 0;
             foreach (var targetStr in targets)
             {
@@ -60,15 +61,28 @@ namespace HS2_MakerSearch
 
                 var rect = cp.GetComponent<RectTransform>();
 
+                var resetCopy = UnityEngine.Object.Instantiate(resetButton, target.transform);
+                resetCopy.name = "Reset";
+            
+                var resetRect = resetCopy.GetComponent<RectTransform>();
+                resetRect.offsetMin = new Vector2(-365, -420);
+                resetRect.offsetMax = new Vector2(-115, -440);
+
+                var oldPos = resetCopy.transform.localPosition;
+                resetCopy.transform.localPosition = new Vector3(155, oldPos.y, oldPos.z);
+                
+                var resetText = resetCopy.GetComponentInChildren<Text>();
+                resetText.text = "Reset";
+                
                 if (i == 1) // Clothes
                 {
-                    rect.offsetMin = new Vector2(-250, 3);
-                    rect.offsetMax = new Vector2(0, -383);
+                    rect.offsetMin = new Vector2(-255, 3);
+                    rect.offsetMax = new Vector2(-60, -383);
                 } 
                 else
                 {
                     rect.offsetMin = new Vector2(-420, 3);
-                    rect.offsetMax = new Vector2(0, -383);
+                    rect.offsetMax = new Vector2(-60, -383);
 
                     var box = target.transform.Find("SelectBox");
                     var scrollview = box.Find("Scroll View");
@@ -93,7 +107,20 @@ namespace HS2_MakerSearch
                     HS2_MakerSearch.searchString = text;
                     HS2_MakerSearch.Search();
                 });
+                
+                var button = resetCopy.GetComponentInChildren<Button>();
 
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(delegate
+                {
+                    input.text = "";
+                    HS2_MakerSearch.searchString = "";
+                    HS2_MakerSearch.Search();
+                });
+
+                var buttonRect = button.GetComponent<RectTransform>();
+                buttonRect.offsetMax = new Vector2(60, 60);
+                
                 fields[i] = input;
 
                 if (i == 2)
