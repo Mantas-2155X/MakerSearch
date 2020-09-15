@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using BepInEx;
 using XUnity.AutoTranslator.Plugin.Core;
 
 namespace KK_MakerSearch

@@ -19,12 +19,11 @@ namespace EC_MakerSearch
 
         public static string searchString;
         public static string TranslationCachePath;
-
+        
         public static CustomSelectListCtrl ctrl;
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
-        
         public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
         
         private void Awake()
@@ -35,7 +34,7 @@ namespace EC_MakerSearch
 
             var harmony = new Harmony(nameof(EC_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
-            
+
             TranslationCachePath = Path.Combine(Paths.CachePath, "EC_MakerSearch.cache");
         }
         

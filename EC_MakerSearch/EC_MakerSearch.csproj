@@ -64,6 +64,10 @@
             <HintPath>..\..\..\libs\Game\EC\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="UniRx">
+          <HintPath>..\..\..\libs\Game\EC\UniRx.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="UnityEngine">
             <HintPath>..\..\..\libs\Game\EC\UnityEngine.dll</HintPath>
             <Private>False</Private>

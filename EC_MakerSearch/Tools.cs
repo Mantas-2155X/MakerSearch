@@ -95,7 +95,7 @@ namespace EC_MakerSearch
                     }
                 }
             }
-            
+
             // Hair
             {
                 var hairObj = parent.transform.Find("02_HairTop");
@@ -125,10 +125,10 @@ namespace EC_MakerSearch
                     for (var i = 0; i < ctrl.transform.childCount; i++)
                     {
                         var child = ctrl.transform.GetChild(i);
-                        
-                        if (!child.name.Contains("win") || !child.name.Contains("Kind"))
-                            continue;
 
+                        if (!child.name.Contains("win") || !child.name.Contains("Kind")) 
+                            continue;
+                        
                         var window = child.Find("customSelectWindow");
                         SetupSearchBar(window, inputField);
                     }
@@ -241,7 +241,7 @@ namespace EC_MakerSearch
             foreach (var t in datas)
                 EC_MakerSearch.ctrl.DisvisibleItem(t.index, disvisibleMemory.Contains(t));
         }
-        
+
         public static void RememberDisvisibles()
         {
             disvisibleMemory.Clear();
