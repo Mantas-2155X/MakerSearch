@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Timers;
 
 using BepInEx;
@@ -15,6 +16,12 @@ namespace KK_MakerSearch
 {
     public static class Hooks
     {
+        private static readonly string[] ignoredDisvisibleCallers =
+        {
+            "MakerSearch_ResetDisables",
+            "MakerSearch_Search"
+        };
+
         [HarmonyPostfix, HarmonyPatch(typeof(CustomControl), "Initialize")]
         private static void CustomControl_Initialize_CreateUI()
         {
@@ -26,6 +33,38 @@ namespace KK_MakerSearch
             SetupCache();
         }
 
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "DisvisibleItem", typeof(string), typeof(bool))]
+        private static void CustomSelectListCtrl_DisvisibleItem_string_ReloadMemory(string name, bool disvisible, List<CustomSelectInfo> ___lstSelectInfo)
+        {
+            if (ignoredDisvisibleCallers.Contains(new StackFrame(2).GetMethod().Name))
+                return;
+
+            var customSelectInfo = ___lstSelectInfo.Find(item => item.name == name);
+            if (customSelectInfo == null) 
+                return;
+
+            if (disvisible)
+                Tools.disvisibleMemory.Add(customSelectInfo);
+            else if (Tools.disvisibleMemory.Contains(customSelectInfo))
+                Tools.disvisibleMemory.Remove(customSelectInfo);
+        }
+        
+        [HarmonyPostfix, HarmonyPatch(typeof(CustomSelectListCtrl), "DisvisibleItem", typeof(int), typeof(bool))]
+        private static void CustomSelectListCtrl_DisvisibleItem_int_ReloadMemory(int index, bool disvisible, List<CustomSelectInfo> ___lstSelectInfo)
+        {
+            if (ignoredDisvisibleCallers.Contains(new StackFrame(2).GetMethod().Name))
+                return;
+
+            var customSelectInfo = ___lstSelectInfo.Find(item => item.index == index);
+            if (customSelectInfo == null) 
+                return;
+
+            if (disvisible)
+                Tools.disvisibleMemory.Add(customSelectInfo);
+            else if (Tools.disvisibleMemory.Contains(customSelectInfo))
+                Tools.disvisibleMemory.Remove(customSelectInfo);
+        }
+        
         private static Timer _cacheSaveTimer;
         private static void SetupCache()
         {

@@ -182,7 +182,7 @@ namespace EC_MakerSearch
             input.onEndEdit.AddListener(delegate(string text)
             {
                 EC_MakerSearch.searchString = text;
-                EC_MakerSearch.Search();
+                EC_MakerSearch.MakerSearch_Search();
             });
             
             fields.Add(input);
@@ -222,7 +222,7 @@ namespace EC_MakerSearch
             if (EC_MakerSearch.ctrl == null || fields == null || fields.Count < 1)
                 return;
             
-            ResetDisables();
+            MakerSearch_ResetDisables();
             
             if (EC_MakerSearch.searchString == "") 
                 return;
@@ -233,7 +233,7 @@ namespace EC_MakerSearch
                 field.text = "";
         }
 
-        public static void ResetDisables()
+        public static void MakerSearch_ResetDisables()
         {
             var trav = Traverse.Create(EC_MakerSearch.ctrl);
             var datas = trav.Field("lstSelectInfo").GetValue<List<CustomSelectInfo>>();

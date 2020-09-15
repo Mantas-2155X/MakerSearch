@@ -39,9 +39,9 @@ namespace KK_MakerSearch
             TranslationCachePath = Path.Combine(Paths.CachePath, "KK_MakerSearch.cache");
         }
         
-        public static void Search()
+        public static void MakerSearch_Search()
         {
-            Tools.ResetDisables();
+            Tools.MakerSearch_ResetDisables();
 
             if (searchString == "")
                 return;

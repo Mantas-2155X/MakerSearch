@@ -182,7 +182,7 @@ namespace KK_MakerSearch
             input.onEndEdit.AddListener(delegate(string text)
             {
                 KK_MakerSearch.searchString = text;
-                KK_MakerSearch.Search();
+                KK_MakerSearch.MakerSearch_Search();
             });
             
             fields.Add(input);
@@ -222,7 +222,7 @@ namespace KK_MakerSearch
             if (KK_MakerSearch.ctrl == null || fields == null || fields.Count < 1)
                 return;
             
-            ResetDisables();
+            MakerSearch_ResetDisables();
             
             if (KK_MakerSearch.searchString == "") 
                 return;
@@ -233,7 +233,7 @@ namespace KK_MakerSearch
                 field.text = "";
         }
 
-        public static void ResetDisables()
+        public static void MakerSearch_ResetDisables()
         {
             var trav = Traverse.Create(KK_MakerSearch.ctrl);
             var datas = trav.Field("lstSelectInfo").GetValue<List<CustomSelectInfo>>();
