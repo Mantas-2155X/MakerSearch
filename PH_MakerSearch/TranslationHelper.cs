@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using BepInEx;
 using XUnity.AutoTranslator.Plugin.Core;
 
 namespace PH_MakerSearch
@@ -38,7 +37,8 @@ namespace PH_MakerSearch
             if (_translatorCallback != null)
             {
                 // XUA needs to run on the main thread
-                ThreadingHelper.Instance.StartSyncInvoke(() => _translatorCallback(input, updateAction));
+                //ThreadingHelper.Instance.StartSyncInvoke(() => _translatorCallback(input, updateAction));
+                _translatorCallback(input, updateAction);
             }
         }
     }
