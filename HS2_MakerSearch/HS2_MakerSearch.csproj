@@ -60,6 +60,10 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="UniRx">
+          <HintPath>..\..\..\libs\Game\HS2\UniRx.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="UnityEngine">
             <HintPath>..\..\..\libs\Game\HS2\UnityEngine.dll</HintPath>
             <Private>False</Private>
