@@ -291,14 +291,23 @@ namespace AI_MakerSearch
 
         public static void ResetSearch()
         {
+            if (AI_MakerSearch.searchTextMemory.Value == SearchTextMemory.None)
+                foreach (var field in fields.Where(field => field != null))
+                    field.text = "";
+
             if (AI_MakerSearch.searchString == "") 
                 return;
             
             UpdateUI(AI_MakerSearch.category);
+            
             AI_MakerSearch.searchString = "";
+        }
 
-            foreach (var field in fields.Where(field => field != null))
-                field.text = "";
+        public enum SearchTextMemory
+        {
+            Separate,
+            Global,
+            None
         }
         
         public enum SearchBy

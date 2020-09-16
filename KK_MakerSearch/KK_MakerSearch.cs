@@ -16,7 +16,7 @@ namespace KK_MakerSearch
     [BepInPlugin(nameof(KK_MakerSearch), nameof(KK_MakerSearch), VERSION)]
     public class KK_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.3.1";
+        public const string VERSION = "1.4.0";
 
         public static string searchString;
         public static string TranslationCachePath;
@@ -25,13 +25,16 @@ namespace KK_MakerSearch
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
-        public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
         
+        public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
+        public static ConfigEntry<Tools.SearchTextMemory> searchTextMemory { get; private set; }
+
         private void Awake()
         {
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
             searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
+            searchTextMemory = Config.Bind(new ConfigDefinition("General", "Search text memory"), Tools.SearchTextMemory.Separate, new ConfigDescription("Global - search text is same for all boxes, \nSeparate - different for each box, \nNone - reset after search"));
 
             var harmony = new Harmony(nameof(KK_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
@@ -41,6 +44,10 @@ namespace KK_MakerSearch
         
         public static void MakerSearch_Search()
         {
+            if (searchTextMemory.Value == Tools.SearchTextMemory.Global)
+                foreach (var field in Tools.fields.Where(field => field != null))
+                    field.text = searchString;
+            
             Tools.MakerSearch_ResetDisables();
 
             if (searchString == "")

@@ -14,9 +14,7 @@ namespace PH_MakerSearch
     [BepInPlugin(nameof(PH_MakerSearch), nameof(PH_MakerSearch), VERSION)]
     public class PH_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.3.1";
-
-        public static PH_MakerSearch instance;
+        public const string VERSION = "1.4.0";
         
         public static string searchString;
         public static string TranslationCachePath;
@@ -27,12 +25,13 @@ namespace PH_MakerSearch
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
 
+        public static ConfigEntry<Tools.SearchTextMemory> searchTextMemory { get; private set; }
+
         private void Awake()
         {
-            instance = this;
-            
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
+            searchTextMemory = Config.Bind(new ConfigDefinition("General", "Search text memory"), Tools.SearchTextMemory.None, new ConfigDescription("Remember - keep search text, \nNone - reset text after search"));
 
             var harmony = new Harmony(nameof(PH_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
@@ -53,11 +52,6 @@ namespace PH_MakerSearch
             for (var i = 0; i < datas.Length; i++)
                 if(!Tools.ItemMatchesSearch(searchString, i))
                     datas[i].gameObject.SetActive(false);
-        }
-
-        private void OnDestroy()
-        {
-            Cacher.WriteCache();
         }
     }
 }

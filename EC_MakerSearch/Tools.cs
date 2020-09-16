@@ -16,7 +16,7 @@ namespace EC_MakerSearch
 {
     public static class Tools
     {
-        private static List<TMP_InputField> fields;
+        public static List<TMP_InputField> fields;
         public static readonly HashSet<CustomSelectInfo> disvisibleMemory = new HashSet<CustomSelectInfo>();
         public static readonly Dictionary<CustomSelectInfo, string> searchNameStrings = new Dictionary<CustomSelectInfo, string>();
 
@@ -243,14 +243,12 @@ namespace EC_MakerSearch
                 return;
             
             MakerSearch_ResetDisables();
-            
-            if (EC_MakerSearch.searchString == "") 
-                return;
-            
-            EC_MakerSearch.searchString = "";
 
-            foreach (var field in fields.Where(field => field != null))
-                field.text = "";
+            if (EC_MakerSearch.searchTextMemory.Value == SearchTextMemory.None)
+                foreach (var field in fields.Where(field => field != null))
+                    field.text = "";
+
+            EC_MakerSearch.searchString = "";
         }
 
         public static void MakerSearch_ResetDisables()
@@ -271,6 +269,13 @@ namespace EC_MakerSearch
 
             foreach (var t in datas.Where(t => t.disvisible))
                 disvisibleMemory.Add(t);
+        }
+        
+        public enum SearchTextMemory
+        {
+            Separate,
+            Global,
+            None
         }
         
         public enum SearchBy

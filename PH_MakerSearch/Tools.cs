@@ -130,7 +130,9 @@ namespace PH_MakerSearch
             ResetDisables();
             
             PH_MakerSearch.searchString = "";
-            PH_MakerSearch.input.text = "";
+            
+            if(PH_MakerSearch.searchTextMemory.Value == SearchTextMemory.None)
+                PH_MakerSearch.input.text = "";
         }
         
         public static void ResetDisables()
@@ -139,6 +141,12 @@ namespace PH_MakerSearch
                 return;
             
             PH_MakerSearch.selectUI.UpdateEnables();
+        }
+        
+        public enum SearchTextMemory
+        {
+            Global,
+            None
         }
     }
 }

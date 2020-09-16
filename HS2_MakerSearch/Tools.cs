@@ -284,14 +284,23 @@ namespace HS2_MakerSearch
 
         public static void ResetSearch()
         {
+            if (HS2_MakerSearch.searchTextMemory.Value == SearchTextMemory.None)
+                foreach (var field in fields.Where(field => field != null))
+                    field.text = "";
+
             if (HS2_MakerSearch.searchString == "") 
                 return;
             
             UpdateUI(HS2_MakerSearch.category);
+            
             HS2_MakerSearch.searchString = "";
-
-            foreach (var field in fields.Where(field => field != null))
-                field.text = "";
+        }
+        
+        public enum SearchTextMemory
+        {
+            Separate,
+            Global,
+            None
         }
         
         public enum SearchBy
