@@ -57,7 +57,7 @@ namespace HS2_MakerSearch
                 var placeholder = placeholderObj.GetComponent<Text>();
                 placeholder.text = "Search";
 
-                UnityEngine.Object.Destroy(cp.transform.Find("SldInputField Input Caret"));
+                UnityEngine.Object.Destroy(cp.transform.Find("SldInputField Input Caret").gameObject);
 
                 var rect = cp.GetComponent<RectTransform>();
 
