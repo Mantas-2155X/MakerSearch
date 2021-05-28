@@ -226,9 +226,9 @@ namespace EC_MakerSearch
                     searchIn = data.assetBundle;
                     break;
             }
-            if (data.id >= UniversalAutoResolver.BaseSlotID)
+            if (data.index >= UniversalAutoResolver.BaseSlotID)
             {
-                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.id);
+                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
                 if (info != null)
                 {
                     Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);

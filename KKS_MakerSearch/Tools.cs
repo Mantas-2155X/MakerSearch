@@ -6,6 +6,8 @@ using HarmonyLib;
 
 using TMPro;
 using ChaCustom;
+//using Sideloader;
+//using Sideloader.AutoResolver;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -225,7 +227,22 @@ namespace KKS_MakerSearch
                     searchIn = data.assetBundle;
                     break;
             }
+            /*
+            if (data.id >= UniversalAutoResolver.BaseSlotID)
+            {
+                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.id);
+                if (info != null)
+                {
+                    Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);
+                    if (manifest.Author != null)
+                    {
+                        searchIn = searchIn + " " + manifest.Author;
+                    }
 
+
+                }
+            }
+            */
             var rule = StringComparison.Ordinal;
             if (!KKS_MakerSearch.caseSensitive.Value)
             {

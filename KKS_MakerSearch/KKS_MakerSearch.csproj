@@ -32,25 +32,25 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="0Harmony">
-            <HintPath>..\..\..\libs\GitHub\BepInEx\latest\BepInEx\core\0Harmony.dll</HintPath>
-            <Private>False</Private>
+        <Reference Include="0Harmony, Version=2.3.2.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\lib\net35\0Harmony.dll</HintPath>
+          <Private>false</Private>
         </Reference>
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\Assembly-CSharp.dll</HintPath>
-            <Private>False</Private>
+            <Private>false</Private>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\Assembly-CSharp-firstpass.dll</HintPath>
-            <Private>False</Private>
+            <Private>false</Private>
         </Reference>
-        <Reference Include="BepInEx">
-            <HintPath>..\..\..\libs\GitHub\BepInEx\latest\BepInEx\core\BepInEx.dll</HintPath>
-            <Private>False</Private>
+        <Reference Include="BepInEx, Version=5.4.8.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\IllusionLibs.BepInEx.5.4.8\lib\net35\BepInEx.dll</HintPath>
+          <Private>false</Private>
         </Reference>
-        <Reference Include="BepInEx.Harmony">
-            <HintPath>..\..\..\libs\GitHub\BepInEx\latest\BepInEx\core\BepInEx.Harmony.dll</HintPath>
-            <Private>False</Private>
+        <Reference Include="BepInEx.Harmony, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\lib\net35\BepInEx.Harmony.dll</HintPath>
+          <Private>false</Private>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
@@ -58,15 +58,15 @@
         <Reference Include="System.Xml" />
         <Reference Include="UniRx, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\UniRx.dll</HintPath>
-            <Private>False</Private>
+            <Private>false</Private>
         </Reference>
         <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\Unity.TextMeshPro.dll</HintPath>
-            <Private>False</Private>
+            <Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\UnityEngine.dll</HintPath>
-            <Private>False</Private>
+            <Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\libs\Game\KKS\UnityEngine.CoreModule.dll</HintPath>
@@ -80,9 +80,9 @@
           <HintPath>..\..\..\libs\Game\KKS\UnityEngine.UIModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="XUnity.AutoTranslator.Plugin.Core, Version=4.16.1.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\libs\GitHub\XUnity\latest\BepInEx\plugins\XUnity.AutoTranslator\XUnity.AutoTranslator.Plugin.Core.dll</HintPath>
-            <Private>False</Private>
+        <Reference Include="XUnity.AutoTranslator.Plugin.Core, Version=4.16.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\lib\net46\XUnity.AutoTranslator.Plugin.Core.dll</HintPath>
+          <Private>false</Private>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -93,5 +93,17 @@
         <Compile Include="Tools.cs" />
         <Compile Include="TranslationHelper.cs" />
     </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Import Project="..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets" Condition="Exists('..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets')" />
+    <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+      <PropertyGroup>
+        <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+      </PropertyGroup>
+      <Error Condition="!Exists('..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets'))" />
+      <Error Condition="!Exists('..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\build\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\build\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.targets'))" />
+    </Target>
+    <Import Project="..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\build\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.targets" Condition="Exists('..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\build\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.targets')" />
 </Project>
