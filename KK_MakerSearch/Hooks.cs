@@ -100,11 +100,12 @@ namespace KK_MakerSearch
                     Tools.searchNameStrings[info] = info.name + "/v" + tl;
                     continue;
                 }
-
+                
+                var currentInfo = info;
                 TranslationHelper.Translate(info.name, s =>
                 {
-                    Tools.searchNameStrings[info] = info.name + "/v" + s;
-                    Cacher.TranslationLookup[info.name] = s;
+                    Tools.searchNameStrings[currentInfo] = currentInfo.name + "/v" + s;
+                    Cacher.TranslationLookup[currentInfo.name] = s;
                 });
 
                 anyTranslations = true;

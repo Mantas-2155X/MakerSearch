@@ -156,14 +156,14 @@ namespace KKS_MakerSearch
         private static void SetupSearchBar(Transform window, Transform inputField, Transform resetButton)
         {
             var bg = window.Find("BasePanel/imgWindowBack");
-            bg.GetComponent<RectTransform>().offsetMin = new Vector2(0, -10);
+            bg.GetComponent<RectTransform>().offsetMin = new Vector2(0, -23);
 
             var newInputField = Object.Instantiate(inputField.gameObject, window);
             newInputField.name = "Search";
 
             var rect = newInputField.GetComponent<RectTransform>();
-            rect.offsetMin = new Vector2(-390, 0);
-            rect.offsetMax = new Vector2(-65, -610);
+            rect.offsetMin = new Vector2(-390, -15);
+            rect.offsetMax = new Vector2(-65, -625);
 
             var input = newInputField.GetComponent<TMP_InputField>();
             input.contentType = TMP_InputField.ContentType.Standard;
@@ -192,8 +192,8 @@ namespace KKS_MakerSearch
             resetCopy.name = "Reset";
             
             var resetRect = resetCopy.GetComponent<RectTransform>();
-            resetRect.offsetMin = new Vector2(-62, 0);
-            resetRect.offsetMax = new Vector2(-8, -610);
+            resetRect.offsetMin = new Vector2(-62, -15);
+            resetRect.offsetMax = new Vector2(-8, -625);
             
             var button = resetCopy.GetComponent<Button>();
 

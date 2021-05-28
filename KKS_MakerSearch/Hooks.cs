@@ -107,6 +107,13 @@ namespace KKS_MakerSearch
                     Cacher.TranslationLookup[info.name] = s;
                 });
 
+                var currentInfo = info;
+                TranslationHelper.Translate(info.name, s =>
+                {
+                    Tools.searchNameStrings[currentInfo] = currentInfo.name + "/v" + s;
+                    Cacher.TranslationLookup[currentInfo.name] = s;
+                });
+
                 anyTranslations = true;
             }
 

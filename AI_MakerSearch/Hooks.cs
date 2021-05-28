@@ -98,10 +98,11 @@ namespace AI_MakerSearch
                     continue;
                 }
 
+                var currentInfo = info.info;
                 TranslationHelper.Translate(info.info.name, s =>
                 {
-                    Tools.searchNameStrings[info.info] = info.info.name + "/v" + s;
-                    Cacher.TranslationLookup[info.info.name] = s;
+                    Tools.searchNameStrings[currentInfo] = currentInfo.name + "/v" + s;
+                    Cacher.TranslationLookup[currentInfo.name] = s;
                 });
 
                 anyTranslations = true;
