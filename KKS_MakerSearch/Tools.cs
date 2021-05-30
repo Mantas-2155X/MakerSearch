@@ -6,8 +6,8 @@ using HarmonyLib;
 
 using TMPro;
 using ChaCustom;
-//using Sideloader;
-//using Sideloader.AutoResolver;
+using Sideloader;
+using Sideloader.AutoResolver;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -214,35 +214,30 @@ namespace KKS_MakerSearch
         {
             var searchIn = "";
 
-            switch (KKS_MakerSearch.searchBy.Value)
+            if (KKS_MakerSearch.searchName.Value)
             {
-                case SearchBy.Name:
-                    searchIn = data.name;
+                searchIn = data.name;
                     
-                    if (KKS_MakerSearch.useTranslatedCache.Value)
-                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
-
-                    break;
-                case SearchBy.AssetBundle:
-                    searchIn = data.assetBundle;
-                    break;
+                if (KKS_MakerSearch.useTranslatedCache.Value)
+                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
             }
-            /*
-            if (data.id >= UniversalAutoResolver.BaseSlotID)
+            
+            if (KKS_MakerSearch.searchAssetBundle.Value)
             {
-                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.id);
+                searchIn = data.assetBundle;
+            }
+            
+            if (KKS_MakerSearch.searchAuthor.Value)
+            {
+                var info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
                 if (info != null)
                 {
-                    Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);
+                    var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
                     if (manifest.Author != null)
-                    {
                         searchIn = searchIn + " " + manifest.Author;
-                    }
-
-
                 }
             }
-            */
+            
             var rule = StringComparison.Ordinal;
             if (!KKS_MakerSearch.caseSensitive.Value)
             {

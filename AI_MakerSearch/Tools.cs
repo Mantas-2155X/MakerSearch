@@ -143,32 +143,30 @@ namespace AI_MakerSearch
         {
             var searchIn = "";
 
-            switch (AI_MakerSearch.searchBy.Value)
+            if (AI_MakerSearch.searchName.Value)
             {
-                case SearchBy.Name:
-                    searchIn = data.name;
+                searchIn = data.name;
                     
-                    if (AI_MakerSearch.useTranslatedCache.Value)
-                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
-
-                    break;
-                case SearchBy.AssetBundle:
-                    searchIn = data.assetBundle;
-                    break;
+                if (AI_MakerSearch.useTranslatedCache.Value)
+                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
             }
-            if (data.id >= UniversalAutoResolver.BaseSlotID)
+            
+            if (AI_MakerSearch.searchAssetBundle.Value)
             {
-                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.id);
+                searchIn = data.assetBundle;
+            }
+            
+            if (AI_MakerSearch.searchAuthor.Value)
+            {
+                var info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.id);
                 if (info != null)
                 {
-                    Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);
+                    var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
                     if (manifest.Author != null)
-                    {
                         searchIn = searchIn + " " + manifest.Author;
-                    }
-
                 }
             }
+
             var rule = StringComparison.Ordinal;
             if (!AI_MakerSearch.caseSensitive.Value)
             {
@@ -324,12 +322,6 @@ namespace AI_MakerSearch
             None
         }
         
-        public enum SearchBy
-        {
-            Name,
-            AssetBundle
-        }
-
         public enum SearchCategory
         {
             FaceMole,

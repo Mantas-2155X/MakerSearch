@@ -24,17 +24,20 @@ namespace EC_MakerSearch
 
         public static ConfigEntry<bool> caseSensitive { get; private set; }
         public static ConfigEntry<bool> useTranslatedCache { get; private set; }
-        
-        public static ConfigEntry<Tools.SearchBy> searchBy { get; private set; }
+        public static ConfigEntry<bool> searchName { get; private set; }
+        public static ConfigEntry<bool> searchAssetBundle { get; private set; }
+        public static ConfigEntry<bool> searchAuthor { get; private set; }
         public static ConfigEntry<Tools.SearchTextMemory> searchTextMemory { get; private set; }
         
         private void Awake()
         {
             caseSensitive = Config.Bind(new ConfigDefinition("General", "Case sensitive"), false);
             useTranslatedCache = Config.Bind(new ConfigDefinition("General", "Search translated cache"), true, new ConfigDescription("Search in translated cache, if nonexistant then translate. Only works when search includes name"));
-            searchBy = Config.Bind(new ConfigDefinition("General", "Search by"), Tools.SearchBy.Name);
             searchTextMemory = Config.Bind(new ConfigDefinition("General", "Search text memory"), Tools.SearchTextMemory.Separate, new ConfigDescription("Global - search text is same for all boxes, \nSeparate - different for each box, \nNone - reset after search"));
-
+            searchName = Config.Bind(new ConfigDefinition("Search", "Include name"), true);
+            searchAssetBundle = Config.Bind(new ConfigDefinition("Search", "Include assetbundle"), false);
+            searchAuthor = Config.Bind(new ConfigDefinition("Search", "Include author"), true);
+            
             var harmony = new Harmony(nameof(EC_MakerSearch));
             harmony.PatchAll(typeof(Hooks));
 

@@ -213,32 +213,30 @@ namespace KK_MakerSearch
         {
             var searchIn = "";
 
-            switch (KK_MakerSearch.searchBy.Value)
+            if (KK_MakerSearch.searchName.Value)
             {
-                case SearchBy.Name:
-                    searchIn = data.name;
+                searchIn = data.name;
                     
-                    if (KK_MakerSearch.useTranslatedCache.Value)
-                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
-
-                    break;
-                case SearchBy.AssetBundle:
-                    searchIn = data.assetBundle;
-                    break;
+                if (KK_MakerSearch.useTranslatedCache.Value)
+                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
             }
-            if (data.index >= UniversalAutoResolver.BaseSlotID)
+            
+            if (KK_MakerSearch.searchAssetBundle.Value)
             {
-                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
+                searchIn = data.assetBundle;
+            }
+            
+            if (KK_MakerSearch.searchAuthor.Value)
+            {
+                var info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
                 if (info != null)
                 {
-                    Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);
+                    var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
                     if (manifest.Author != null)
-                    {
                         searchIn = searchIn + " " + manifest.Author;
-                    }
-
                 }
             }
+
             var rule = StringComparison.Ordinal;
             if (!KK_MakerSearch.caseSensitive.Value)
             {

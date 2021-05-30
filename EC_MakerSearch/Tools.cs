@@ -213,30 +213,27 @@ namespace EC_MakerSearch
         {
             var searchIn = "";
 
-            switch (EC_MakerSearch.searchBy.Value)
+            if (EC_MakerSearch.searchName.Value)
             {
-                case SearchBy.Name:
-                    searchIn = data.name;
+                searchIn = data.name;
                     
-                    if (EC_MakerSearch.useTranslatedCache.Value)
-                        searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
-
-                    break;
-                case SearchBy.AssetBundle:
-                    searchIn = data.assetBundle;
-                    break;
+                if (EC_MakerSearch.useTranslatedCache.Value)
+                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
             }
-            if (data.index >= UniversalAutoResolver.BaseSlotID)
+            
+            if (EC_MakerSearch.searchAssetBundle.Value)
             {
-                ResolveInfo info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
+                searchIn = data.assetBundle;
+            }
+            
+            if (EC_MakerSearch.searchAuthor.Value)
+            {
+                var info = UniversalAutoResolver.TryGetResolutionInfo((ChaListDefine.CategoryNo)data.category, data.index);
                 if (info != null)
                 {
-                    Manifest manifest = Sideloader.Sideloader.GetManifest(info.GUID);
+                    var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
                     if (manifest.Author != null)
-                    {
                         searchIn = searchIn + " " + manifest.Author;
-                    }
-
                 }
             }
 

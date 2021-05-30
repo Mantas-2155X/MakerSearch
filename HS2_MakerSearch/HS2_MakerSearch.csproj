@@ -53,8 +53,12 @@
           <Private>false</Private>
         </Reference>
         <Reference Include="HS2_Sideloader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\libs\GitHub\HS2_BepisPlugins_r16.3\BepInEx\plugins\HS2_BepisPlugins\HS2_Sideloader.dll</HintPath>
-            <Private>false</Private>
+          <HintPath>..\packages\Sideloader.HoneySelect2.16.3.0\lib\net46\HS2_Sideloader.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.1.9, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+          <HintPath>..\packages\SharpZipLib.1.3.1\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+          <Private>false</Private>
         </Reference>
         <Reference Include="IL, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\packages\IllusionLibs.HoneySelect2.IL.2020.5.29.4\lib\net46\IL.dll</HintPath>
@@ -86,6 +90,14 @@
         </Reference>
         <Reference Include="XUnity.AutoTranslator.Plugin.Core, Version=4.16.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\packages\IllusionLibs.XUnity.AutoTranslator.Plugin.Core.4.16.0\lib\net46\XUnity.AutoTranslator.Plugin.Core.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="XUnity.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\XUnity.Common.1.0.0\lib\net35\XUnity.Common.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="XUnity.ResourceRedirector, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\XUnity.ResourceRedirector.1.1.0\lib\net35\XUnity.ResourceRedirector.dll</HintPath>
           <Private>false</Private>
         </Reference>
     </ItemGroup>
