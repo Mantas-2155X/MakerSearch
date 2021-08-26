@@ -137,15 +137,15 @@ namespace HS2_MakerSearch
 
             if (HS2_MakerSearch.searchName.Value)
             {
-                searchIn = data.name;
+                searchIn = searchIn + " " + data.name;
                     
                 if (HS2_MakerSearch.useTranslatedCache.Value)
-                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
+                    searchIn = searchIn + " " + (searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name);
             }
             
             if (HS2_MakerSearch.searchAssetBundle.Value)
             {
-                searchIn = data.assetBundle;
+                searchIn = searchIn + " " + data.assetBundle;
             }
             
             if (HS2_MakerSearch.searchAuthor.Value)
@@ -154,7 +154,7 @@ namespace HS2_MakerSearch
                 if (info != null)
                 {
                     var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
-                    if (manifest.Author != null)
+                    if (manifest?.Author != null)
                         searchIn = searchIn + " " + manifest.Author;
                 }
             }

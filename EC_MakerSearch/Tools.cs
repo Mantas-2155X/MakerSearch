@@ -215,15 +215,15 @@ namespace EC_MakerSearch
 
             if (EC_MakerSearch.searchName.Value)
             {
-                searchIn = data.name;
+                searchIn = searchIn + " " + data.name;
                     
                 if (EC_MakerSearch.useTranslatedCache.Value)
-                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
+                    searchIn = searchIn + " " + (searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name);
             }
             
             if (EC_MakerSearch.searchAssetBundle.Value)
             {
-                searchIn = data.assetBundle;
+                searchIn = searchIn + " " + data.assetBundle;
             }
             
             if (EC_MakerSearch.searchAuthor.Value)
@@ -232,7 +232,7 @@ namespace EC_MakerSearch
                 if (info != null)
                 {
                     var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
-                    if (manifest.Author != null)
+                    if (manifest?.Author != null)
                         searchIn = searchIn + " " + manifest.Author;
                 }
             }

@@ -145,15 +145,15 @@ namespace AI_MakerSearch
 
             if (AI_MakerSearch.searchName.Value)
             {
-                searchIn = data.name;
+                searchIn = searchIn + " " + data.name;
                     
                 if (AI_MakerSearch.useTranslatedCache.Value)
-                    searchIn = searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name;
+                    searchIn = searchIn + " " + (searchNameStrings.TryGetValue(data, out var cachedTranslation) ? cachedTranslation : data.name);
             }
             
             if (AI_MakerSearch.searchAssetBundle.Value)
             {
-                searchIn = data.assetBundle;
+                searchIn = searchIn + " " + data.assetBundle;
             }
             
             if (AI_MakerSearch.searchAuthor.Value)
@@ -162,7 +162,7 @@ namespace AI_MakerSearch
                 if (info != null)
                 {
                     var manifest = Sideloader.Sideloader.GetManifest(info.GUID);
-                    if (manifest.Author != null)
+                    if (manifest?.Author != null)
                         searchIn = searchIn + " " + manifest.Author;
                 }
             }
