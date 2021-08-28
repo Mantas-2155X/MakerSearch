@@ -4,18 +4,19 @@ using System.Collections.Generic;
 
 using AIChara;
 using CharaCustom;
-using Sideloader;
 using Sideloader.AutoResolver;
 using UnityEngine;
 using UnityEngine.UI;
-
-using HarmonyLib;
 
 namespace HS2_MakerSearch
 {
     public static class Tools
     {
-        public static readonly InputField[] fields = new InputField[19];
+        public static readonly CustomSelectScrollController[] controllers = new CustomSelectScrollController[21];
+
+        public static readonly CvsBase[] cvss = new CvsBase[21];
+        public static readonly InputField[] fields = new InputField[21];
+
         public static readonly Dictionary<CustomSelectInfo, string> searchNameStrings = new Dictionary<CustomSelectInfo, string>();
         
         private static readonly string[] targets =
@@ -39,6 +40,8 @@ namespace HS2_MakerSearch
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupCheek/Setting/Setting01",               // Face Cheek
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupLip/Setting/Setting01",                 // Face Lip
             "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_MakeupPaint/Setting/Setting01",               // Face Paint
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_FaceType/Setting/Setting02",                  // Face Skin
+            "CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_FaceType/Setting/Setting03",                  // Face Wrinkles
         };
  
         public static void CreateUI()
@@ -46,10 +49,11 @@ namespace HS2_MakerSearch
             var orig = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinFace/F_ShapeWhole/Scroll View/Viewport/Content/SliderSet/SldInputField");
             var resetButton = GameObject.Find("CharaCustom/CustomControl/CanvasSub/SettingWindow/WinClothes/DefaultWin/C_Clothes/Setting/Setting01/DefaultColor");
             
-            var i = 0;
-            foreach (var targetStr in targets)
+            for (var i = 0; i < targets.Length; i++)
             {
-                var target = GameObject.Find(targetStr);
+                var idx = i;
+                
+                var target = GameObject.Find(targets[i]);
 
                 var cp = UnityEngine.Object.Instantiate(orig, target.transform);
                 cp.name = "Search";
@@ -79,7 +83,7 @@ namespace HS2_MakerSearch
                 {
                     rect.offsetMin = new Vector2(-255, 3);
                     rect.offsetMax = new Vector2(-60, -383);
-                } 
+                }
                 else
                 {
                     rect.offsetMin = new Vector2(-420, 3);
@@ -89,7 +93,7 @@ namespace HS2_MakerSearch
                     var scrollview = box.Find("Scroll View");
                     
                     box.GetComponent<RectTransform>().offsetMin = new Vector2(0, -372);
-                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, i == 2 ? -264 : i == 4 ? -332 : -372);
+                    scrollview.GetComponent<RectTransform>().offsetMin = new Vector2(0, i == 2 ? -264 : i == 4 || i == 20 ? -332 : -372);
                 }
 
                 var input = cp.GetComponent<InputField>();
@@ -106,7 +110,7 @@ namespace HS2_MakerSearch
                 input.onEndEdit.AddListener(delegate(string text)
                 {
                     HS2_MakerSearch.searchString = text;
-                    HS2_MakerSearch.Search();
+                    HS2_MakerSearch.Search(idx);
                 });
                 
                 var button = resetCopy.GetComponentInChildren<Button>();
@@ -116,7 +120,7 @@ namespace HS2_MakerSearch
                 {
                     input.text = "";
                     HS2_MakerSearch.searchString = "";
-                    HS2_MakerSearch.Search();
+                    HS2_MakerSearch.Search(idx);
                 });
 
                 var buttonRect = button.GetComponent<RectTransform>();
@@ -126,8 +130,6 @@ namespace HS2_MakerSearch
 
                 if (i == 2)
                     cp.SetActive(false);
-                
-                i++;
             }
         }
 
@@ -170,178 +172,191 @@ namespace HS2_MakerSearch
             return splitSearchStr.All(s => searchIn.IndexOf(s, rule) >= 0);
         }
         
-        public static bool UpdateUI(SearchCategory category)
+        public static bool UpdateUI(int controllerIdx)
         {
-            switch (category)
+            if (controllerIdx == -1)
+                return false;
+            
+            if (controllerIdx == 0)
             {
-                case SearchCategory.FaceEyeIris:
-                    var listFIris = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeblack);
-                    Traverse.Create(HS2_MakerSearch.cvsEye).Field("sscBlackType").Method("CreateList", listFIris).GetValue();
-
-                    HS2_MakerSearch.cvsEye.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceEyePupil:
-                    var listFPupil = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye);
-                    Traverse.Create(HS2_MakerSearch.cvsEye).Field("sscPupilType").Method("CreateList", listFPupil).GetValue();
-
-                    HS2_MakerSearch.cvsEye.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceMole:
-                    var listFMole = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_mole);
-                    Traverse.Create(HS2_MakerSearch.cvsMole).Field("sscMole").Method("CreateList", listFMole).GetValue();
-
-                    HS2_MakerSearch.cvsMole.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceHighlight:
-                    var listFHighlight = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye_hl);
-                    Traverse.Create(HS2_MakerSearch.cvsHighlight).Field("sscEyeHLType").Method("CreateList", listFHighlight).GetValue();
-
-                    HS2_MakerSearch.cvsHighlight.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceEyebrow:
-                    var listFEyebrow = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyebrow);
-                    Traverse.Create(HS2_MakerSearch.cvsEyebrow).Field("sscEyebrowType").Method("CreateList", listFEyebrow).GetValue();
-
-                    HS2_MakerSearch.cvsEyebrow.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceEyelash:
-                    var listFEyelash = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyelash);
-                    Traverse.Create(HS2_MakerSearch.cvsEyelash).Field("sscEyelashesType").Method("CreateList", listFEyelash).GetValue();
-
-                    HS2_MakerSearch.cvsEyelash.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceEyeshadow:
-                    var listFEyeshadow = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeshadow);
-                    Traverse.Create(HS2_MakerSearch.cvsEyeshadow).Field("sscEyeshadowType").Method("CreateList", listFEyeshadow).GetValue();
-
-                    HS2_MakerSearch.cvsEyelash.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceCheek:
-                    var listFCheek = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_cheek);
-                    Traverse.Create(HS2_MakerSearch.cvsCheek).Field("sscCheekType").Method("CreateList", listFCheek).GetValue();
-
-                    HS2_MakerSearch.cvsEyelash.UpdateCustomUI();
-                    break;
-                case SearchCategory.FaceLip:
-                    var listFLip = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_lip);
-                    Traverse.Create(HS2_MakerSearch.cvsLip).Field("sscLipType").Method("CreateList", listFLip).GetValue();
-
-                    HS2_MakerSearch.cvsEyelash.UpdateCustomUI();
-                    break;
-                case SearchCategory.FacePaint:
-                    var listFPaint = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint);
-                    Traverse.Create(HS2_MakerSearch.cvsFacePaint).Field("sscPaintType").Method("CreateList", listFPaint).GetValue();
-
-                    HS2_MakerSearch.cvsEyelash.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodySkin:
-                    var listBSkin = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_skin_b : ChaListDefine.CategoryNo.ft_skin_b);
-                    Traverse.Create(HS2_MakerSearch.cvsSkin).Field("sscSkinType").Method("CreateList", listBSkin).GetValue();
-
-                    HS2_MakerSearch.cvsSkin.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodyDetail:
-                    var listBDetail = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_detail_b : ChaListDefine.CategoryNo.ft_detail_b);
-                    Traverse.Create(HS2_MakerSearch.cvsSkin).Field("sscDetailType").Method("CreateList", listBDetail).GetValue();
-
-                    HS2_MakerSearch.cvsSkin.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodySunburn:
-                    var listBSunburn = CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_sunburn : ChaListDefine.CategoryNo.ft_sunburn);
-                    Traverse.Create(HS2_MakerSearch.cvsSunburn).Field("sscSunburnType").Method("CreateList", listBSunburn).GetValue();
-
-                    HS2_MakerSearch.cvsSunburn.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodyNip:
-                    var listBNip = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_nip);
-                    Traverse.Create(HS2_MakerSearch.cvsNip).Field("sscNipType").Method("CreateList", listBNip).GetValue();
-
-                    HS2_MakerSearch.cvsNip.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodyUnderhair:
-                    var listBUnderhair = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_underhair);
-                    Traverse.Create(HS2_MakerSearch.cvsUnderhair).Field("sscUnderhairType").Method("CreateList", listBUnderhair).GetValue();
-
-                    HS2_MakerSearch.cvsUnderhair.UpdateCustomUI();
-                    break;
-                case SearchCategory.BodyPaint:
-                    var listBPaint = CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint);
-                    Traverse.Create(HS2_MakerSearch.cvsPaint).Field("sscPaintType").Method("CreateList", listBPaint).GetValue();
-
-                    HS2_MakerSearch.cvsPaint.UpdateCustomUI();
-                    break;
-                case SearchCategory.Hair:
-                    HS2_MakerSearch.cvsHair.UpdateHairList();
-                    HS2_MakerSearch.cvsHair.UpdateCustomUI();
-                    break;
-                case SearchCategory.Clothes:
-                    HS2_MakerSearch.cvsClothes.UpdateClothesList();
-                    HS2_MakerSearch.cvsClothes.UpdateCustomUI();
-                    break;
-                case SearchCategory.Accessories:
-                    HS2_MakerSearch.cvsAccessories.UpdateAcsList();
-                    HS2_MakerSearch.cvsAccessories.UpdateCustomUI();
-                    break;
-                case SearchCategory.Extra:
-                    return false;
-                case SearchCategory.None:
-                    return false;
-                default:
-                    return false;
+                var cvs = (CvsH_Hair)cvss[controllerIdx];
+                cvs.UpdateHairList();
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 1)
+            {
+                var cvs = (CvsC_Clothes)cvss[controllerIdx];
+                cvs.UpdateClothesList();
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 2)
+            {
+                var cvs = (CvsA_Slot)cvss[controllerIdx];
+                cvs.UpdateAcsList();
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 3)
+            {
+                var cvs = (CvsB_Skin)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_skin_b: ChaListDefine.CategoryNo.ft_skin_b));
+                cvs.UpdateCustomUI();            
+            }
+            else if (controllerIdx == 4)
+            {
+                var cvs = (CvsB_Skin)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_detail_b: ChaListDefine.CategoryNo.ft_detail_b));
+                cvs.UpdateCustomUI();            
+            }
+            else if (controllerIdx == 5)
+            {
+                var cvs = (CvsB_Sunburn)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_sunburn : ChaListDefine.CategoryNo.ft_sunburn));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 6)
+            {
+                var cvs = (CvsB_Nip)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_nip));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 7)
+            {
+                var cvs = (CvsB_Underhair)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_underhair));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 8)
+            {
+                var cvs = (CvsF_Mole)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_mole));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 9)
+            {
+                var cvs = (CvsF_Mole)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_mole));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 10)
+            {
+                var cvs = (CvsF_EyeLR)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeblack));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 11)
+            {
+                var cvs = (CvsF_EyeLR)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 12)
+            {
+                var cvs = (CvsF_EyeHL)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye_hl));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 13)
+            {
+                var cvs = (CvsF_Eyebrow)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyebrow));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 14)
+            {
+                var cvs = (CvsF_Eyelashes)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyelash));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 15)
+            {
+                var cvs = (CvsF_MakeupEyeshadow)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeshadow));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 16)
+            {
+                var cvs = (CvsF_MakeupEyeshadow)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_cheek));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 17)
+            {
+                var cvs = (CvsF_MakeupLip)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_lip));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 18)
+            {
+                var cvs = (CvsF_MakeupPaint)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint));
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 19)
+            {
+                var cvs = (CvsF_FaceType)cvss[controllerIdx];
+                cvs.UpdateSkinList();
+                cvs.UpdateCustomUI();
+            }
+            else if (controllerIdx == 20)
+            {
+                var cvs = (CvsF_FaceType)cvss[controllerIdx];
+                var controller = controllers[controllerIdx];
+                
+                controller.CreateList(CvsBase.CreateSelectList(HS2_MakerSearch.sex == 0 ? ChaListDefine.CategoryNo.mt_detail_f : ChaListDefine.CategoryNo.ft_detail_f));
+                cvs.UpdateCustomUI();
             }
 
             return true;
         }
 
-        public static void ResetSearch()
+        public static void ResetSearch(int controllerIdx)
         {
             if (HS2_MakerSearch.searchTextMemory.Value == SearchTextMemory.None)
                 foreach (var field in fields.Where(field => field != null))
                     field.text = "";
 
-            if (HS2_MakerSearch.searchString == "") 
-                return;
-            
-            UpdateUI(HS2_MakerSearch.category);
+            UpdateUI(controllerIdx);
             
             HS2_MakerSearch.searchString = "";
+            HS2_MakerSearch.lastControllerIdx = -1;
         }
         
         public enum SearchTextMemory
         {
             Separate,
             Global,
-            None
-        }
-        
-        public enum SearchBy
-        {
-            Name,
-            AssetBundle
-        }
-
-        public enum SearchCategory
-        {
-            FaceMole,
-            FaceEyePupil,
-            FaceEyeIris,
-            FaceHighlight,
-            FaceEyebrow,
-            FaceEyelash,
-            FaceEyeshadow,
-            FaceCheek,
-            FaceLip,
-            FacePaint,
-            BodySkin,
-            BodyDetail,
-            BodySunburn,
-            BodyNip,
-            BodyUnderhair,
-            BodyPaint,
-            Hair,
-            Clothes,
-            Accessories,
-            Extra,
             None
         }
     }
