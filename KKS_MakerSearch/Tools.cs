@@ -6,7 +6,6 @@ using HarmonyLib;
 
 using TMPro;
 using ChaCustom;
-using Sideloader;
 using Sideloader.AutoResolver;
 
 using UnityEngine;
@@ -288,12 +287,6 @@ namespace KKS_MakerSearch
             Separate,
             Global,
             None
-        }
-        
-        public enum SearchBy
-        {
-            Name,
-            AssetBundle
         }
     }
 }

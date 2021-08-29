@@ -288,11 +288,5 @@ namespace EC_MakerSearch
             Global,
             None
         }
-        
-        public enum SearchBy
-        {
-            Name,
-            AssetBundle
-        }
     }
 }
