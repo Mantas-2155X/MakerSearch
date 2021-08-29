@@ -6,7 +6,7 @@ This plugin allows you search items in the Character Maker.
 
 **Features:**  
 * Searchbox built into the UI  
-* Search by `Name`, `Asset Bundle` [2]  
+* Search by `Name`, `Asset Bundle`, `Author` [2]  
 * Search case sensitive/insensitive  
 * Search using XUnityAutoTranslator or original text  
 * Face searching support [1]
