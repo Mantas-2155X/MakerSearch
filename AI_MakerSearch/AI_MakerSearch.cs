@@ -1,57 +1,26 @@
 ﻿using System.IO;
 using System.Linq;
-
 using BepInEx;
 using BepInEx.Configuration;
-
-using HarmonyLib;
-
 using CharaCustom;
-using SuperScrollView;
-
+using HarmonyLib;
 using UnityEngine;
 
 namespace AI_MakerSearch
 {
-    [BepInProcess("AI-Syoujyo")]
     [BepInProcess("AI-Shoujo")]
+    [BepInProcess("AI-Syoujyo")]
     [BepInPlugin(nameof(AI_MakerSearch), nameof(AI_MakerSearch), VERSION)]
     public class AI_MakerSearch : BaseUnityPlugin
     {
         public const string VERSION = "1.5.0";
 
-        public static bool isSteam;
         public static string searchString;
         public static string TranslationCachePath;
+        public static int lastControllerIdx;
 
-        public static CvsH_Hair cvsHair;
+        public static bool isSteam;
         
-        public static CvsC_Clothes cvsClothes;
-        
-        public static CvsA_Slot cvsAccessories;
-        
-        public static CvsB_Skin cvsSkin;
-        public static CvsB_Sunburn cvsSunburn;
-        public static CvsB_Nip cvsNip;
-        public static CvsB_Underhair cvsUnderhair;
-        public static CvsB_Paint cvsPaint;
-        
-        public static CvsF_Mole cvsMole;
-        public static CvsF_EyeLR cvsEye;
-        public static CvsF_EyeHL cvsHighlight;
-        public static CvsF_Eyebrow cvsEyebrow;
-        public static CvsF_Eyelashes cvsEyelash;
-
-        public static CvsF_MakeupEyeshadow cvsEyeshadow;
-        public static CvsF_MakeupCheek cvsCheek;
-        public static CvsF_MakeupLip cvsLip;
-        public static CvsF_MakeupPaint cvsFacePaint;
-        
-        public static LoopListView2 view;
-        public static CustomSelectScrollController controller;
-        
-        public static Tools.SearchCategory category;
-
         public static byte sex;
         
         public static ConfigEntry<bool> caseSensitive { get; private set; }
@@ -69,30 +38,35 @@ namespace AI_MakerSearch
             searchName = Config.Bind(new ConfigDefinition("Search", "Include name"), true);
             searchAssetBundle = Config.Bind(new ConfigDefinition("Search", "Include assetbundle"), false);
             searchAuthor = Config.Bind(new ConfigDefinition("Search", "Include author"), true);
-            category = Tools.SearchCategory.None;
-            
-            var harmony = new Harmony(nameof(AI_MakerSearch));
-            harmony.PatchAll(typeof(Hooks));
             
             isSteam = Application.productName == "AI-Shoujo";
+            
+            var harmony = Harmony.CreateAndPatchAll(typeof(Hooks));
+            
+            var iteratorType = typeof(CvsBase).GetNestedType("<Start>c__AnonStorey0", AccessTools.all);
+            var iteratorMethod = AccessTools.Method(iteratorType, "<>m__0");
+            var postfix = new HarmonyMethod(typeof(Hooks), nameof(Hooks.Patch_ResetSearch));
+            harmony.Patch(iteratorMethod, null, postfix);
             
             TranslationCachePath = Path.Combine(Paths.CachePath, "AI_MakerSearch.cache");
         }
 
-        public static void Search()
+        public static void Search(int controllerIdx)
         {
             if (searchTextMemory.Value == Tools.SearchTextMemory.Global)
                 foreach (var field in Tools.fields.Where(field => field != null))
                     field.text = searchString;
             
-            if (!Tools.UpdateUI(category))
+            if (!Tools.UpdateUI(controllerIdx))
                 return;
 
             if (searchString == "")
                 return;
 
-            var trav = Traverse.Create(controller);
-            var datas = trav.Field("scrollerDatas").GetValue<CustomSelectScrollController.ScrollData[]>();
+            lastControllerIdx = controllerIdx;
+            
+            var controller = Tools.controllers[controllerIdx];
+            var datas = controller.scrollerDatas;
 
             var datalist = datas.ToList();
             foreach (var data in datalist.ToArray())
@@ -107,9 +81,8 @@ namespace AI_MakerSearch
             }
             datas = datalist.ToArray();
 
-            trav.Field("scrollerDatas").SetValue(datas);
-
-            view.ReSetListItemCount(Mathf.CeilToInt((float)datas.Length / trav.Field("countPerRow").GetValue<int>()));
+            controller.scrollerDatas = datas;
+            controller.view.ReSetListItemCount(Mathf.CeilToInt((float)datas.Length / controller.countPerRow));
         }
     }
 }
