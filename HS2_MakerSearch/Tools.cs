@@ -256,7 +256,7 @@ namespace HS2_MakerSearch
                 var cvs = (CvsF_EyeLR)cvss[controllerIdx];
                 var controller = controllers[controllerIdx];
                 
-                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeblack));
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye));
                 cvs.UpdateCustomUI();
             }
             else if (controllerIdx == 11)
@@ -264,7 +264,7 @@ namespace HS2_MakerSearch
                 var cvs = (CvsF_EyeLR)cvss[controllerIdx];
                 var controller = controllers[controllerIdx];
                 
-                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eye));
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_eyeblack));
                 cvs.UpdateCustomUI();
             }
             else if (controllerIdx == 12)
