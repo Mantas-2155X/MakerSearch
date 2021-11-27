@@ -15,7 +15,7 @@ namespace EC_MakerSearch
     [BepInPlugin(nameof(EC_MakerSearch), nameof(EC_MakerSearch), VERSION)]
     public class EC_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.5.0";
+        public const string VERSION = "1.5.1";
 
         public static string searchString;
         public static string TranslationCachePath;
