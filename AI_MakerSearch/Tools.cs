@@ -245,10 +245,10 @@ namespace AI_MakerSearch
             }
             else if (controllerIdx == 8)
             {
-                var cvs = (CvsF_Mole)cvss[controllerIdx];
+                var cvs = (CvsB_Paint)cvss[controllerIdx];
                 var controller = controllers[controllerIdx];
                 
-                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_mole));
+                controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_paint));
                 cvs.UpdateCustomUI();
             }
             else if (controllerIdx == 9)
