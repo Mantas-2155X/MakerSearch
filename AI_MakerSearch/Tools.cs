@@ -309,7 +309,7 @@ namespace AI_MakerSearch
             }
             else if (controllerIdx == 16)
             {
-                var cvs = (CvsF_MakeupEyeshadow)cvss[controllerIdx];
+                var cvs = (CvsF_MakeupCheek)cvss[controllerIdx];
                 var controller = controllers[controllerIdx];
                 
                 controller.CreateList(CvsBase.CreateSelectList(ChaListDefine.CategoryNo.st_cheek));

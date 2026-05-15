@@ -17,7 +17,7 @@ namespace KK_MakerSearch
     [BepInPlugin(nameof(KK_MakerSearch), nameof(KK_MakerSearch), VERSION)]
     public class KK_MakerSearch : BaseUnityPlugin
     {
-        public const string VERSION = "1.5.2";
+        public const string VERSION = "1.5.3";
 
         public static string searchString;
         public static string TranslationCachePath;
